@@ -566,6 +566,7 @@
     </template>
 
     <template id="trait-item-template">
+         <!-- Corrected: The LI is the .trait-item -->
         <li class="trait-item">
             <label>
                 <input type="checkbox" name="ancestry-trait" data-ap="" data-type="" data-trait-name="" data-ancestry="">
@@ -620,54 +621,84 @@
 
         // --- Helper Functions ---
         function getTraitName(checkbox) {
-            // Use data-trait-name as the primary source
             return checkbox.dataset.traitName || 'Unknown Trait';
         }
 
         function setTraitDisabled(checkbox, isDisabled) {
-            const item = checkbox.closest('.trait-item');
+            const item = checkbox.closest('.trait-item'); // Target the LI
             if (item) {
                 item.classList.toggle('disabled', isDisabled);
                 checkbox.disabled = isDisabled;
+            } else {
+                console.warn("Could not find parent .trait-item for checkbox:", checkbox.id);
             }
         }
 
         // --- UI Population ---
         function populateAncestrySelector(races) {
-            ancestrySelector.innerHTML = '<h3>Select Ancestries (Choose 1 or 2):</h3>'; // Clear existing
+            // Ensure the container exists before clearing/appending
+            const selectorContainer = document.getElementById('ancestry-selector');
+             if (!selectorContainer) {
+                 console.error("Ancestry selector container not found!");
+                 loadingErrorDiv.textContent = 'Error: Ancestry selector container missing in HTML.';
+                 return;
+             }
+            selectorContainer.innerHTML = '<h3>Select Ancestries (Choose 1 or 2):</h3>'; // Clear existing
             races.forEach(race => {
+                if (!ancestryCheckboxTemplate) {
+                     console.error("Ancestry checkbox template not found!");
+                     return;
+                }
                 const clone = ancestryCheckboxTemplate.content.cloneNode(true);
                 const label = clone.querySelector('label');
                 const input = clone.querySelector('input');
                 const span = clone.querySelector('.ancestry-name');
+
+                if (!label || !input || !span) {
+                     console.error("Template structure error in ancestry checkbox template.");
+                     return;
+                }
 
                 input.value = race.id;
                 input.id = `select-${race.id}`;
                 label.htmlFor = input.id;
                 span.textContent = race.name;
 
-                ancestrySelector.appendChild(clone);
+                selectorContainer.appendChild(clone);
             });
             // Add event listener after populating
-            ancestrySelector.addEventListener('change', handleAncestrySelectionChange);
+            selectorContainer.addEventListener('change', handleAncestrySelectionChange);
         }
 
         function createRaceSection(race) {
+             if (!raceSectionTemplate || !traitItemTemplate || !revelationOptionTemplate) {
+                 console.error("One or more HTML templates are missing!");
+                 loadingErrorDiv.textContent = 'Error: Required HTML templates are missing.';
+                 return; // Stop execution if templates aren't found
+             }
+
             const sectionClone = raceSectionTemplate.content.cloneNode(true);
             const sectionElement = sectionClone.querySelector('.ancestry-section');
             const baseInfoList = sectionClone.querySelector('.base-info ul');
+            const raceNameDisplay = sectionClone.querySelector('.race-name-display');
+
+            if (!sectionElement || !baseInfoList || !raceNameDisplay) {
+                 console.error("Template structure error in race section template.");
+                 return;
+            }
+
 
             sectionElement.id = `${race.id}-section`;
             sectionElement.dataset.ancestryId = race.id;
-            sectionClone.querySelector('.race-name-display').textContent = race.name;
+            raceNameDisplay.textContent = race.name;
 
             // Populate Base Info
-            baseInfoList.innerHTML = ''; // Clear template defaults
+            baseInfoList.innerHTML = '';
             if (race.baseInfo) {
                 for (const [key, value] of Object.entries(race.baseInfo)) {
-                    if (value) { // Only add if value exists
+                    if (value) {
                         const li = document.createElement('li');
-                        const keyFormatted = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()); // Format key
+                        const keyFormatted = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                         li.innerHTML = `<strong>${keyFormatted}:</strong> ${value}`;
                         baseInfoList.appendChild(li);
                     }
@@ -689,19 +720,23 @@
                 const categoryContainer = sectionClone.querySelector(`.trait-category-container.${type}-traits`);
                 const listElement = categoryContainer?.querySelector('.trait-list');
 
-                if (!listElement || !categoryContainer) continue; // Skip if container/list not found
+                if (!listElement || !categoryContainer) {
+                     console.warn(`Could not find list container for type "${type}" in race "${race.name}"`);
+                     continue;
+                }
 
                 if (traits.length === 0) {
-                    categoryContainer.style.display = 'none'; // Hide category if no traits of this type
+                    categoryContainer.style.display = 'none';
                     continue;
                 } else {
-                     categoryContainer.style.display = ''; // Ensure it's visible if traits exist
+                     categoryContainer.style.display = '';
                 }
 
 
                 traits.forEach(trait => {
                     const traitClone = traitItemTemplate.content.cloneNode(true);
-                    const listItem = traitClone.querySelector('.trait-item');
+                    // *** CORRECTED SELECTOR ***
+                    const listItem = traitClone.querySelector('.trait-item'); // Select the LI element
                     const label = traitClone.querySelector('label');
                     const input = traitClone.querySelector('input');
                     const nameSpan = traitClone.querySelector('.trait-name');
@@ -709,33 +744,43 @@
                     const descP = traitClone.querySelector('.trait-description');
                     const revelationOptionsDiv = traitClone.querySelector('.revelation-options');
 
-                    input.id = trait.id; // Use trait ID from JSON
+                    if (!listItem || !label || !input || !nameSpan || !costSpan || !descP || !revelationOptionsDiv) {
+                         console.error("Template structure error in trait item template for trait:", trait.name);
+                         return; // Skip this trait if template is broken
+                    }
+
+                    input.id = trait.id;
                     input.dataset.ap = trait.ap;
                     input.dataset.type = trait.type;
                     input.dataset.traitName = trait.name;
-                    input.dataset.ancestry = race.id; // Link trait to its race
+                    input.dataset.ancestry = race.id;
                     label.htmlFor = input.id;
 
                     nameSpan.textContent = trait.name;
                     costSpan.textContent = `(${trait.ap > 0 ? '+' : ''}${trait.ap} AP)`;
-                    costSpan.className = 'trait-cost'; // Reset classes
+                    costSpan.className = 'trait-cost';
                     if (trait.ap === 0) costSpan.classList.add('minor');
                     if (trait.ap < 0) costSpan.classList.add('negative');
-                    if (trait.ap > 0) costSpan.classList.add('positive'); // Optional positive styling
+                    if (trait.ap > 0) costSpan.classList.add('positive');
 
                     descP.textContent = trait.description;
 
-                    // Handle subtypes (like Aasimar Revelation)
+                    // Handle subtypes
                     if (trait.subtypes && trait.subtypes.length > 0) {
-                        revelationOptionsDiv.innerHTML = ''; // Clear placeholder
-                        revelationOptionsDiv.id = `${trait.id}-options`; // Unique ID for options div
+                        revelationOptionsDiv.innerHTML = '';
+                        revelationOptionsDiv.id = `${trait.id}-options`;
                         trait.subtypes.forEach(subtype => {
                             const subtypeClone = revelationOptionTemplate.content.cloneNode(true);
                             const subtypeLabel = subtypeClone.querySelector('label');
                             const subtypeInput = subtypeClone.querySelector('input');
                             const subtypeSpan = subtypeClone.querySelector('.subtype-label');
 
-                            subtypeInput.name = `${trait.id}-choice`; // Group radios by trait ID
+                             if (!subtypeLabel || !subtypeInput || !subtypeSpan) {
+                                 console.error("Template structure error in revelation option template.");
+                                 return;
+                             }
+
+                            subtypeInput.name = `${trait.id}-choice`;
                             subtypeInput.value = subtype.value;
                             subtypeInput.id = `${trait.id}-${subtype.value.toLowerCase().replace(/\s+/g, '-')}`;
                             subtypeLabel.htmlFor = subtypeInput.id;
@@ -743,23 +788,21 @@
 
                             revelationOptionsDiv.appendChild(subtypeClone);
                         });
-                         revelationOptionsDiv.style.display = ''; // Make sure div itself is ready to be shown by CSS
-                         // Add listener to the main checkbox to trigger validation on subtype change
+                         revelationOptionsDiv.style.display = '';
                          input.addEventListener('change', calculateAndValidateAP);
-                         // Add listener to the radio group itself
                          revelationOptionsDiv.addEventListener('change', calculateAndValidateAP);
 
                     } else {
-                        revelationOptionsDiv.remove(); // Remove the placeholder if no subtypes
+                        revelationOptionsDiv.remove();
                     }
 
-
-                    listElement.appendChild(traitClone);
+                    // Append the actual list item (LI)
+                    listElement.appendChild(listItem);
                 });
             }
 
             traitForm.appendChild(sectionClone);
-            visibleRaceSections[race.id] = sectionElement; // Track the added section
+            visibleRaceSections[race.id] = sectionElement;
         }
 
         // --- Event Handlers ---
@@ -768,20 +811,19 @@
             const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
             let selectedCount = selectedCheckboxes.length;
 
-            // Disable/Enable remaining checkboxes
             ancestrySelector.querySelectorAll('input[name="ancestry-choice"]:not(:checked)').forEach(cb => {
                 cb.disabled = selectedCount >= MAX_ANCESTRIES;
             });
 
-            // Show/Hide sections
             Object.keys(visibleRaceSections).forEach(id => {
-                visibleRaceSections[id].classList.toggle('visible', selectedIds.includes(id));
+                 if (visibleRaceSections[id]) { // Check if section exists
+                    visibleRaceSections[id].classList.toggle('visible', selectedIds.includes(id));
+                 }
             });
 
-            // Add/Remove class for side-by-side layout
             traitForm.classList.toggle('two-columns', selectedCount === 2);
 
-            calculateAndValidateAP(); // Recalculate after changing visibility
+            calculateAndValidateAP();
         }
 
         // --- Core Calculation & Validation ---
@@ -861,7 +903,14 @@
                     if (minorTraitOrigins.size > 1) {
                         validationMessages.push(`Minor Traits must all come from the same ancestry when two ancestries are chosen.`);
                         isSelectionValid = false;
+                        // Disable ALL minor traits if mixed origins are selected
+                         allVisibleCheckboxes.forEach(cb => {
+                            if (cb.dataset.type === 'minor' && !cb.checked) {
+                                setTraitDisabled(cb, true);
+                            }
+                        });
                     } else {
+                        // Disable minor traits from the *other* ancestry
                         const origin = minorTraitOrigins.values().next().value;
                         allVisibleCheckboxes.forEach(cb => {
                             if (cb.dataset.type === 'minor' && cb.dataset.ancestry !== origin) {
@@ -872,14 +921,17 @@
                 }
             }
 
-            // Check Aasimar Revelation subtype (if Aasimar section exists)
-            const revelationCheckbox = document.getElementById('aasimar-celestial-revelation'); // Check if element exists first
-            if (revelationCheckbox && revelationCheckbox.checked) {
-                const subtypeRadioName = `${revelationCheckbox.id}-choice`; // Construct radio group name
-                const selectedSubtype = document.querySelector(`input[name="${subtypeRadioName}"]:checked`);
-                if (!selectedSubtype) {
-                     validationMessages.push(`Please select a Celestial Revelation subtype.`);
-                     isSelectionValid = false;
+            // Check Aasimar Revelation subtype (if Aasimar section exists and is visible)
+            const aasimarSection = document.getElementById('aasimar-section');
+            if (aasimarSection && aasimarSection.classList.contains('visible')) {
+                const revelationCheckbox = document.getElementById('aasimar-celestial-revelation');
+                if (revelationCheckbox && revelationCheckbox.checked) {
+                    const subtypeRadioName = `${revelationCheckbox.id}-choice`;
+                    const selectedSubtype = document.querySelector(`input[name="${subtypeRadioName}"]:checked`);
+                    if (!selectedSubtype) {
+                         validationMessages.push(`Please select a Celestial Revelation subtype.`);
+                         isSelectionValid = false;
+                    }
                 }
             }
 
@@ -979,20 +1031,25 @@
             try {
                 const response = await fetch(RACE_DATA_URL);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Attempt to provide more specific feedback for common GitHub Pages issues
+                    if (response.status === 404) {
+                         throw new Error(`HTTP error! status: ${response.status} (Not Found). Make sure '${RACE_DATA_URL}' exists in the same directory as index.html and the filename case matches exactly.`);
+                    } else {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                 }
                 allRaceData = await response.json();
                 loadingErrorDiv.textContent = ''; // Clear loading message
 
                 if (!Array.isArray(allRaceData) || allRaceData.length === 0) {
-                     throw new Error("Fetched data is not a valid race array.");
+                     throw new Error("Fetched data is not a valid race array or is empty.");
                 }
 
                 // Populate UI
                 populateAncestrySelector(allRaceData);
                 allRaceData.forEach(createRaceSection); // Create all sections initially (hidden)
 
-                // Add global listener for trait changes
+                // Add global listener for trait changes AFTER sections are created
                 traitForm.addEventListener('change', calculateAndValidateAP);
 
                 // Set initial theme
@@ -1012,7 +1069,7 @@
 
             } catch (error) {
                 console.error('Failed to load or process race data:', error);
-                loadingErrorDiv.textContent = `Error loading race data from ${RACE_DATA_URL}. Please check the file and console for details.`;
+                loadingErrorDiv.textContent = `Error loading race data: ${error.message}. Please check the file and console for details.`;
                 // Disable controls if data fails to load
                 ancestrySelector.innerHTML = '<h3>Error Loading Races</h3>';
                 showSummaryButton.disabled = true;
