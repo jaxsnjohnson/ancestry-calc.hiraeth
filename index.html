@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiraeth Ancestry Point Calculator</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables for Theming */
+        :root {
+            --bg-color-light: #f8f9fa;
+            --text-color-light: #212529;
+            --card-bg-light: #ffffff;
+            --border-color-light: #dee2e6;
+            --accent-color-light: #0d6efd;
+            --valid-color-light: #198754;
+            --invalid-color-light: #dc3545;
+            --minor-trait-color-light: #6c757d;
+            --negative-trait-color-light: #fd7e14;
+            --button-bg-light: #e9ecef;
+            --button-text-light: #212529;
+
+            --bg-color-dark: #212529;
+            --text-color-dark: #f8f9fa;
+            --card-bg-dark: #343a40;
+            --border-color-dark: #495057;
+            --accent-color-dark: #6ea8fe;
+            --valid-color-dark: #20c997;
+            --invalid-color-dark: #f17c70;
+            --minor-trait-color-dark: #adb5bd;
+            --negative-trait-color-dark: #ffc107;
+            --button-bg-dark: #495057;
+            --button-text-dark: #f8f9fa;
+
+
+            --bg-color: var(--bg-color-light);
+            --text-color: var(--text-color-light);
+            --card-bg: var(--card-bg-light);
+            --border-color: var(--border-color-light);
+            --accent-color: var(--accent-color-light);
+            --valid-color: var(--valid-color-light);
+            --invalid-color: var(--invalid-color-light);
+            --minor-trait-color: var(--minor-trait-color-light);
+            --negative-trait-color: var(--negative-trait-color-light);
+            --button-bg: var(--button-bg-light);
+            --button-text: var(--button-text-light);
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            --bg-color: var(--bg-color-dark);
+            --text-color: var(--text-color-dark);
+            --card-bg: var(--card-bg-dark);
+            --border-color: var(--border-color-dark);
+            --accent-color: var(--accent-color-dark);
+            --valid-color: var(--valid-color-dark);
+            --invalid-color: var(--invalid-color-dark);
+            --minor-trait-color: var(--minor-trait-color-dark);
+            --negative-trait-color: var(--negative-trait-color-dark);
+            --button-bg: var(--button-bg-dark);
+            --button-text: var(--button-text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 0.75em;
+            color: var(--accent-color);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1em;
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            margin-right: 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+            border-color: var(--accent-color);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
+        .theme-toggle-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: var(--card-bg);
+            border: none;
+            z-index: 100;
+        }
+
+        .ancestry-selector {
+            margin-bottom: 2em;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+        }
+        .ancestry-selector h3 {
+             margin-bottom: 0.5em;
+             color: var(--text-color);
+        }
+        .ancestry-selector label {
+            margin-right: 15px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .ancestry-selector input[type="checkbox"] {
+             margin-right: 5px;
+        }
+
+        /* --- Side-by-Side Layout --- */
+        #trait-form {
+            display: block;
+        }
+
+        #trait-form.two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        #trait-form.two-columns .ancestry-section.visible {
+            flex: 1;
+            min-width: 350px;
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+         #trait-form.two-columns .ancestry-section.visible:first-of-type {
+             padding-right: 12px;
+         }
+         #trait-form.two-columns .ancestry-section.visible:last-of-type {
+             padding-left: 12px;
+             border-left: 1px solid var(--border-color);
+         }
+
+
+        .ancestry-section {
+            margin-top: 2em;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5em;
+            display: none;
+        }
+
+        .ancestry-section.visible {
+            display: block;
+        }
+
+        /* Responsive stacking */
+        @media (max-width: 850px) {
+            #trait-form.two-columns {
+                flex-direction: column;
+                gap: 0;
+            }
+             #trait-form.two-columns .ancestry-section.visible {
+                 min-width: 100%;
+                 border-left: none;
+                 padding-left: 0;
+                 padding-right: 0;
+                 margin-top: 2em;
+                 border-top: 1px solid var(--border-color);
+                 padding-top: 1.5em;
+             }
+             #trait-form.two-columns .ancestry-section.visible:first-of-type {
+                 margin-top: 0;
+                 border-top: none;
+                 padding-top: 0;
+             }
+        }
+
+
+        .trait-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .trait-item {
+            margin-bottom: 1em;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .trait-item > label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+
+        .trait-item input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .trait-details {
+            flex-grow: 1;
+        }
+
+        .trait-name {
+            font-weight: bold;
+            display: inline;
+        }
+
+        .trait-cost {
+            font-style: italic;
+            margin-left: 8px;
+            font-size: 0.9em;
+        }
+
+        .trait-cost.minor { color: var(--minor-trait-color); }
+        .trait-cost.negative { color: var(--negative-trait-color); }
+        .trait-cost.positive { color: var(--text-color); }
+
+        .trait-description {
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: var(--text-color);
+            opacity: 0.85;
+        }
+        .trait-description ul {
+            margin-top: 0.5em;
+            margin-left: 20px;
+        }
+        .trait-description li {
+            margin-bottom: 0.3em;
+        }
+
+        .revelation-options {
+            display: none;
+            margin-top: 10px;
+            padding-left: 25px;
+            font-size: 0.9em;
+        }
+        .revelation-options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+         .revelation-options input[type="radio"] {
+            margin-right: 8px;
+         }
+
+        .trait-item input[type="checkbox"]:checked ~ .trait-details .revelation-options {
+            display: block;
+        }
+
+
+        .ap-tracker {
+            margin-top: 1em;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: border-color 0.3s;
+        }
+
+        .ap-tracker.valid {
+            border-color: var(--valid-color);
+            color: var(--valid-color);
+        }
+
+        .ap-tracker.invalid {
+            border-color: var(--invalid-color);
+            color: var(--invalid-color);
+        }
+
+        #validation-messages {
+            margin-top: 1em;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            min-height: 40px;
+        }
+
+        #validation-messages ul {
+            list-style-position: inside;
+            padding-left: 5px;
+        }
+
+        #validation-messages li {
+            color: var(--invalid-color);
+        }
+
+        .base-info {
+            background-color: var(--bg-color);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            font-size: 0.95em;
+            border: 1px dashed var(--border-color);
+        }
+        .base-info strong {
+            color: var(--accent-color);
+        }
+        .base-info ul {
+            list-style-position: inside;
+            padding-left: 5px;
+            margin-top: 0.5em;
+        }
+
+        .trait-category {
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .summary-section {
+            margin-top: 2em;
+            padding-top: 1.5em;
+            border-top: 1px solid var(--border-color);
+        }
+        #summary-output {
+            width: 100%;
+            min-height: 150px;
+            margin-top: 10px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical;
+        }
+        .summary-controls {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="theme-toggle" class="theme-toggle-button">Toggle Theme</button>
+
+    <div class="container">
+        <h1>Hiraeth Ancestry Point Calculator</h1>
+
+        <!-- Updated Rule Text -->
+        <p>Select one or two ancestries below to choose traits from. You start with <strong>5 Ancestry Points (AP)</strong>. Your total cost must equal exactly 5 AP at character creation. You can gain a maximum of 2 AP from Negative Traits.
+        <br><strong>Minor Traits (0 AP):</strong> If you select only <strong>one</strong> ancestry, you may choose a maximum of <strong>one</strong> Minor Trait. If you select <strong>two</strong> ancestries, you may choose one or more Minor Traits, but they must <strong>all</strong> come from the <strong>same single ancestry</strong>.</p>
+
+        <!-- Ancestry Selector -->
+        <div id="ancestry-selector" class="ancestry-selector">
+            <h3>Select Ancestries (Choose 1 or 2):</h3>
+            <label for="select-human">
+                <input type="checkbox" id="select-human" name="ancestry-choice" value="human"> Human
+            </label>
+            <label for="select-aasimar">
+                <input type="checkbox" id="select-aasimar" name="ancestry-choice" value="aasimar"> Aasimar
+            </label>
+            <label for="select-gnome">
+                <input type="checkbox" id="select-gnome" name="ancestry-choice" value="gnome"> Gnome
+            </label>
+            <!-- Add more ancestry checkboxes here -->
+        </div>
+
+        <!-- AP Tracker and Validation -->
+        <div id="ap-tracker" class="ap-tracker">
+            Total AP Spent: <span id="current-ap">0</span> / 5
+        </div>
+        <div id="validation-messages"></div>
+
+        <!-- Trait Forms Container -->
+        <form id="trait-form">
+
+            <!-- Human Ancestry Section -->
+            <section id="human-section" class="ancestry-section">
+                <h2>Human</h2>
+                <div class="base-info">
+                    <strong>Base Traits:</strong>
+                    <ul>
+                        <li><strong>Size:</strong> Medium</li>
+                        <li><strong>Speed:</strong> 30 feet</li>
+                        <li><strong>Creature Type:</strong> Humanoid</li>
+                        <li><strong>Ability Scores:</strong> +1 to any two different ability scores, -1 to any one ability score (Apply these manually).</li>
+                    </ul>
+                </div>
+
+                <h3 class="trait-category">Minor Trait</h3>
+                <ul class="trait-list">
+                     <li class="trait-item">
+                        <label for="human-magical-awareness">
+                            <input type="checkbox" id="human-magical-awareness" name="ancestry-trait" data-ap="0" data-type="minor" data-trait-name="Magical Awareness" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Magical Awareness</span>
+                                <span class="trait-cost minor">(0 AP - Minor Trait)</span>
+                                <p class="trait-description">Sense strong magic (1st+ level spells, magic items) within 30ft (no location/nature).</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <h3 class="trait-category">Default / Expanded Traits</h3>
+                <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="human-asi">
+                            <input type="checkbox" id="human-asi" name="ancestry-trait" data-ap="2" data-type="default" data-trait-name="Ability Score Increase" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Ability Score Increase</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Choose one ability score. It increases by 2.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-determination">
+                            <input type="checkbox" id="human-determination" name="ancestry-trait" data-ap="1" data-type="default" data-trait-name="Human Determination" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Human Determination</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Once per long rest, reaction to add 1d4 to an attack roll, ability check, or saving throw for self or ally within 30ft.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-undying">
+                            <input type="checkbox" id="human-undying" name="ancestry-trait" data-ap="2" data-type="default" data-trait-name="Undying" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Undying</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Succeed on death saving throws on a roll of 9 or higher.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-versatile-training">
+                            <input type="checkbox" id="human-versatile-training" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Versatile Training" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Versatile Training</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency in one skill, one tool, and one simple or martial weapon.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-unbreakable">
+                            <input type="checkbox" id="human-unbreakable" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Unbreakable" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Unbreakable</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Advantage on death saves. Regain Level + Prof Bonus HP when stabilized or healed at 0 HP.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-quick-learner">
+                            <input type="checkbox" id="human-quick-learner" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Quick Learner" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Quick Learner</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency in one additional skill or tool.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-cultural-memory">
+                            <input type="checkbox" id="human-cultural-memory" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Cultural Memory" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Cultural Memory</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Learn two additional languages.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-explorers-tenacity">
+                            <input type="checkbox" id="human-explorers-tenacity" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Explorer’s Tenacity" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Explorer’s Tenacity</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Ignore non-magical difficult terrain. Advantage on Con saves vs. exhaustion from forced marches/environment.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-arcane-curiosity">
+                            <input type="checkbox" id="human-arcane-curiosity" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Arcane Curiosity" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Arcane Curiosity</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Learn one Wizard cantrip (Charisma casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-spell-dabbler">
+                            <input type="checkbox" id="human-spell-dabbler" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Spell Dabbler" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Spell Dabbler</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Learn one 1st-level Wizard spell (cast 1/long rest, Charisma casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-channel-spark">
+                            <input type="checkbox" id="human-channel-spark" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Channel Spark" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Channel Spark</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">1/long rest, add 1d4 to one spell attack roll or increase DC by 1d4 for one target.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-counter-instinct">
+                            <input type="checkbox" id="human-counter-instinct" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Counter-Instinct" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Counter-Instinct</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">1/short rest, reaction for advantage on save vs. spell/magical effect.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-multi-magical">
+                            <input type="checkbox" id="human-multi-magical" name="ancestry-trait" data-ap="3" data-type="expanded" data-trait-name="Multi Magical" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Multi Magical</span>
+                                <span class="trait-cost positive">(3 AP)</span>
+                                <p class="trait-description">+1 spell prepared/known for one class.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="human-magical-mimicry">
+                            <input type="checkbox" id="human-magical-mimicry" name="ancestry-trait" data-ap="3" data-type="expanded" data-trait-name="Magical Mimicery" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Magical Mimicery</span>
+                                <span class="trait-cost positive">(3 AP)</span>
+                                <p class="trait-description">Learn spells from another class list (1 at L2, +1 every 2 levels).</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <h3 class="trait-category">Negative Traits (Grant AP)</h3>
+                <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="human-overconfident">
+                            <input type="checkbox" id="human-overconfident" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Overconfident" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Overconfident</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Nat 1 attack/check -> disadvantage on next same type attack/check.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-impetuous">
+                            <input type="checkbox" id="human-impetuous" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Impetuous" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Impetuous</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on initiative rolls.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="human-cultural-disregard">
+                            <input type="checkbox" id="human-cultural-disregard" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Cultural Disregard" data-ancestry="human">
+                            <div class="trait-details">
+                                <span class="trait-name">Cultural Disregard</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on Insight/Persuasion/Deception with different cultures (unless shared language).</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Aasimar Ancestry Section -->
+            <section id="aasimar-section" class="ancestry-section">
+                <h2>Aasimar</h2>
+                 <div class="base-info">
+                    <strong>Base Traits:</strong>
+                    <ul>
+                        <li><strong>Size:</strong> Medium</li>
+                        <li><strong>Speed:</strong> 30 feet</li>
+                        <li><strong>Creature Type:</strong> Humanoid</li>
+                        <li><strong>Ability Scores:</strong> +1 Dex, +1 Cha, -1 Con (Apply these manually).</li>
+                    </ul>
+                </div>
+
+                <h3 class="trait-category">Minor Traits</h3>
+                 <ul class="trait-list">
+                     <li class="trait-item">
+                        <label for="aasimar-healing-hands">
+                            <input type="checkbox" id="aasimar-healing-hands" name="ancestry-trait" data-ap="0" data-type="minor" data-trait-name="Healing Hands" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Healing Hands</span>
+                                <span class="trait-cost minor">(0 AP - Minor Trait)</span>
+                                <p class="trait-description">1/Long Rest, action touch to restore HP = Level + Con mod.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="aasimar-virtuous-symbol">
+                            <input type="checkbox" id="aasimar-virtuous-symbol" name="ancestry-trait" data-ap="0" data-type="minor" data-trait-name="Virtuous Symbol" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Virtuous Symbol</span>
+                                <span class="trait-cost minor">(0 AP - Minor Trait)</span>
+                                <p class="trait-description">Glowing celestial symbol appears when using divine abilities/Revelation. (Cannot take with Healing Hands).</p>
+                            </div>
+                        </label>
+                    </li>
+                 </ul>
+
+                <h3 class="trait-category">Default / Expanded Traits</h3>
+                 <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="aasimar-celestial-resistance">
+                            <input type="checkbox" id="aasimar-celestial-resistance" name="ancestry-trait" data-ap="2" data-type="default" data-trait-name="Celestial Resistance" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Celestial Resistance</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Resistance to Radiant and Necrotic damage.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="aasimar-celestial-revelation">
+                            <input type="checkbox" id="aasimar-celestial-revelation" name="ancestry-trait" data-ap="1" data-type="default" data-trait-name="Celestial Revelation" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Celestial Revelation</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">1/Long Rest, bonus action, transform for 1 min. Choose one effect below:</p>
+                                <!-- Sub-options for Celestial Revelation -->
+                                <div class="revelation-options" id="revelation-subtype-options">
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Radiant Soul"> Radiant Soul</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Radiant Consumption"> Radiant Consumption</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Necrotic Shroud"> Necrotic Shroud</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Dawn's Light"> Dawn's Light</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Twilight Veil"> Twilight Veil</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Solar Flare"> Solar Flare</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Lunar Shield"> Lunar Shield</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Starfall"> Starfall</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Storm Fury"> Storm Fury</label>
+                                    <label><input type="radio" name="celestial-revelation-choice" value="Earthen Guard"> Earthen Guard</label>
+                                </div>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="aasimar-darkvision">
+                            <input type="checkbox" id="aasimar-darkvision" name="ancestry-trait" data-ap="1" data-type="default" data-trait-name="Darkvision" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Darkvision</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">See in dim light within 60ft as bright, darkness as dim.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="aasimar-divine-presence">
+                            <input type="checkbox" id="aasimar-divine-presence" name="ancestry-trait" data-ap="1" data-type="default" data-trait-name="Divine Presence" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Divine Presence</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on Influence checks with those respectful of divine beings.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-celestial-grace">
+                            <input type="checkbox" id="aasimar-celestial-grace" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Celestial Grace" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Celestial Grace</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on saves vs. Charmed or Frightened.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-radiant-pulse">
+                            <input type="checkbox" id="aasimar-radiant-pulse" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Radiant Pulse" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Radiant Pulse</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">1/Combat, when reduced to 0 HP (not killed), reaction: chosen creatures in 10ft regain 1 HP. Then fall Unconscious.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-virtue-of-mercy">
+                            <input type="checkbox" id="aasimar-virtue-of-mercy" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Virtue of Mercy" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Virtue of Mercy</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Stabilized creature regains HP = half Level (up). 1/Long Rest, Stabilize as Free Action when adjacent.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-celestial-tongue">
+                            <input type="checkbox" id="aasimar-celestial-tongue" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Celestial Tongue" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Celestial Tongue</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Speak/Read/Write Celestial. Advantage on History/Religion checks about divine/celestial beings.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-aura-of-warmth">
+                            <input type="checkbox" id="aasimar-aura-of-warmth" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Aura of Warmth" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Aura of Warmth</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Allies within 10ft gain Advantage on saves vs. extreme cold and Frightened condition.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-sacred-legacy">
+                            <input type="checkbox" id="aasimar-sacred-legacy" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Sacred Legacy" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Sacred Legacy</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Choose one 1st-level Cleric/Paladin spell. Cast 1/Long Rest (Charisma casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-seraphic-endurance">
+                            <input type="checkbox" id="aasimar-seraphic-endurance" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Seraphic Endurance" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Seraphic Endurance</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on saves vs. Exhaustion. Recover 1 Exhaustion level on Short Rest.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-beacon-of-hope">
+                            <input type="checkbox" id="aasimar-beacon-of-hope" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Beacon of Hope" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Beacon of Hope</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">1/Long Rest, reaction when ally in 25ft fails save: allow reroll (must use new result).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-luminous-recovery">
+                            <input type="checkbox" id="aasimar-luminous-recovery" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Luminous Recovery" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Luminous Recovery</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">First time regaining HP in combat, gain Temp HP = Level + Con mod.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-wings-of-grace">
+                            <input type="checkbox" id="aasimar-wings-of-grace" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Wings of Grace" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Wings of Grace</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Spectral wings: Fly Speed = Movement Speed. Controlled Falling (no fall damage if conscious).</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <h3 class="trait-category">Negative Traits (Grant AP)</h3>
+                <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="aasimar-burden-of-legacy">
+                            <input type="checkbox" id="aasimar-burden-of-legacy" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Burden of Legacy" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Burden of Legacy</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Visible birthmarks -> Disadvantage on Stealth checks.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-divine-expectation">
+                            <input type="checkbox" id="aasimar-divine-expectation" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Divine Expectation" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Divine Expectation</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">1/session, Disadvantage on first check/save related to defying tradition/expectation.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-overwhelming-radiance">
+                            <input type="checkbox" id="aasimar-overwhelming-radiance" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Overwhelming Radiance" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Overwhelming Radiance</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Cannot benefit from Hide Action unless heavily obscured or magically concealed.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-marked-by-destiny">
+                            <input type="checkbox" id="aasimar-marked-by-destiny" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Marked by Destiny" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Marked by Destiny</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on the first Death Saving Throw each session.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-celestial-isolation">
+                            <input type="checkbox" id="aasimar-celestial-isolation" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Celestial Isolation" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Celestial Isolation</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on Persuasion/Deception with non-religious NPCs unless succeed DC 10 Insight first.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="aasimar-heavens-burden">
+                            <input type="checkbox" id="aasimar-heavens-burden" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Heaven’s Burden" data-ancestry="aasimar">
+                            <div class="trait-details">
+                                <span class="trait-name">Heaven’s Burden</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Need 8 uninterrupted hours for Long Rest benefits.</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Gnome Ancestry Section -->
+            <section id="gnome-section" class="ancestry-section">
+                <h2>Gnome</h2>
+                 <div class="base-info">
+                    <strong>Base Traits:</strong>
+                    <ul>
+                        <li><strong>Size:</strong> Small</li>
+                        <li><strong>Speed:</strong> 25 feet</li>
+                        <li><strong>Creature Type:</strong> Humanoid</li>
+                        <li><strong>Ability Scores:</strong> +1 Dex, +1 Int, -1 Con (Apply these manually).</li>
+                        <li><strong>Languages:</strong> Common, Gnomish, GSL (Gnomish Sign Language)</li>
+                    </ul>
+                </div>
+
+                <h3 class="trait-category">Minor Traits</h3>
+                <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="gnome-cunning">
+                            <input type="checkbox" id="gnome-cunning" name="ancestry-trait" data-ap="0" data-type="minor" data-trait-name="Gnome Cunning" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Gnome Cunning</span>
+                                <span class="trait-cost minor">(0 AP - Minor Trait)</span>
+                                <p class="trait-description">Advantage on all Intelligence, Wisdom, and Charisma saving throws against magic.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-predict-weather">
+                            <input type="checkbox" id="gnome-predict-weather" name="ancestry-trait" data-ap="0" data-type="minor" data-trait-name="Predict Weather" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Predict Weather</span>
+                                <span class="trait-cost minor">(0 AP - Minor Trait)</span>
+                                <p class="trait-description">Accurately predict natural weather for next hour (1-mile radius). Never caught off guard by mundane weather changes. (Cannot take with Gnome Cunning).</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <h3 class="trait-category">Expanded Traits</h3>
+                <ul class="trait-list">
+                    <!-- Forest Gnome Traits -->
+                    <li class="trait-item">
+                        <label for="gnome-nature-whisperer">
+                            <input type="checkbox" id="gnome-nature-whisperer" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Nature Whisperer" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Nature Whisperer</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Advantage on Animal Handling & Nature checks (identifying plants/animals, diagnosing natural afflictions).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-speak-small-beasts">
+                            <input type="checkbox" id="gnome-speak-small-beasts" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Speak with Small Beasts" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Speak with Small Beasts</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Communicate simple ideas with Small or smaller beasts via sounds/gestures.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-natural-illusionist">
+                            <input type="checkbox" id="gnome-natural-illusionist" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Natural Illusionist" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Natural Illusionist</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Know the Minor Illusion cantrip (Intelligence casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-woodcarver-skill">
+                            <input type="checkbox" id="gnome-woodcarver-skill" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Woodcarver's Skill" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Woodcarver's Skill</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency with woodcarver's tools.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Rock Gnome Traits -->
+                     <li class="trait-item">
+                        <label for="gnome-artificer-lore">
+                            <input type="checkbox" id="gnome-artificer-lore" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Artificer's Lore" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Artificer's Lore</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Double proficiency bonus on History checks related to magic items, alchemy, or tech devices.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-tinker">
+                            <input type="checkbox" id="gnome-tinker" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Tinker" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Tinker</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency with tinker's tools. Can spend 1hr & 10gp materials to make a Tiny clockwork device (Toy, Fire Starter, or Music Box) lasting 24hrs. Max 3 active.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-skilled-merchant">
+                            <input type="checkbox" id="gnome-skilled-merchant" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Skilled Merchant" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Skilled Merchant</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">When selling own goods/services, use Int/Wis/Cha for Persuasion/Deception/Performance checks & double proficiency bonus.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-mason-aptitude">
+                            <input type="checkbox" id="gnome-mason-aptitude" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Mason’s Aptitude" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Mason’s Aptitude</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency with mason's tools.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Deep Gnome Traits -->
+                     <li class="trait-item">
+                        <label for="gnome-superior-darkvision">
+                            <input type="checkbox" id="gnome-superior-darkvision" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Superior Darkvision" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Superior Darkvision</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Darkvision radius becomes 120 feet.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-stone-camouflage">
+                            <input type="checkbox" id="gnome-stone-camouflage" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Stone Camouflage" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Stone Camouflage</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on Stealth checks to hide in rocky terrain.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-svirfneblin-magic">
+                            <input type="checkbox" id="gnome-svirfneblin-magic" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Svirfneblin Magic" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Svirfneblin Magic</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Know Message cantrip. L3: Disguise Self 1/long rest. L5: Nondetection (self only) 1/long rest. (Int casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-stone-sense">
+                            <input type="checkbox" id="gnome-stone-sense" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Stone Sense" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Stone Sense</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on Investigation/Perception checks for unusual stonework, hidden passages, or stone instability.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Desert/Beach Gnome Traits -->
+                     <li class="trait-item">
+                        <label for="gnome-no-stranger-sun">
+                            <input type="checkbox" id="gnome-no-stranger-sun" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="No Stranger to the Sun" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">No Stranger to the Sun</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Resistance to fire damage. Naturally adapted to hot climates.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-flame-hardened">
+                            <input type="checkbox" id="gnome-flame-hardened" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Flame-Hardened Skin" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Flame-Hardened Skin</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">When taking fire damage, gain +Prof Bonus to AC until start of next turn (once per round).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-sand-shaper">
+                            <input type="checkbox" id="gnome-sand-shaper" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Sand Shaper" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Sand Shaper</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Know Mold Earth cantrip. L3: Earth Tremor 1/long rest. L5: Wall of Sand 1/long rest. (Int casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Arctic Gnome Traits -->
+                     <li class="trait-item">
+                        <label for="gnome-snow-born">
+                            <input type="checkbox" id="gnome-snow-born" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Snow Born" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Snow Born</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Resistance to cold damage. Naturally adapted to cold climates.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-snow-burrow">
+                            <input type="checkbox" id="gnome-snow-burrow" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Snow Burrow" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Snow Burrow</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Bonus action to burrow into snow (1ft+ deep). Burrow speed 15ft. Total cover while burrowed. Emerge as bonus action.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-ice-magic">
+                            <input type="checkbox" id="gnome-ice-magic" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Ice Magic" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Ice Magic</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Know Shape Water cantrip (ice/snow only). L3: Armor of Agathys (1st level) 1/long rest. L5: Sleet Storm 1/long rest. (Int casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Crystal Gnome Traits -->
+                     <li class="trait-item">
+                        <label for="gnome-crystal-vision">
+                            <input type="checkbox" id="gnome-crystal-vision" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Crystal Clear Vision" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Crystal Clear Vision</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Truesight 5ft. Advantage on saves vs. Blinded & checks vs. illusions/shapechanging within 30ft.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-resonance-crystal">
+                            <input type="checkbox" id="gnome-resonance-crystal" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Resonance Crystal" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Resonance Crystal</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Personal crystal focus. Grants minor passive benefit or active ability (Prof Bonus uses/long rest) based on gem type (GM discretion).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-light-weaver">
+                            <input type="checkbox" id="gnome-light-weaver" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Light Weaver" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Light Weaver</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Know Light cantrip (mentally control radius). L3: Color Spray 1/long rest. L5: Daylight 1/long rest. (Int casting).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- General Expanded -->
+                     <li class="trait-item">
+                        <label for="gnome-escape-artist">
+                            <input type="checkbox" id="gnome-escape-artist" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Escape Artist" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Escape Artist</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Advantage on checks/saves to avoid or escape Grappled/Restrained.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-magnified-vision">
+                            <input type="checkbox" id="gnome-magnified-vision" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Magnified Vision" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Magnified Vision</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on Investigation checks to examine something held or within 5ft.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-mental-clarity">
+                            <input type="checkbox" id="gnome-mental-clarity" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Mental Clarity" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Mental Clarity</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Advantage on saves vs. Dazed or Stunned (if conditions exist).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-strong-minded">
+                            <input type="checkbox" id="gnome-strong-minded" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Strong-Minded" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Strong-Minded</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Mental Defense (MD) increases by 1 (Requires GM definition).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-mana-increase">
+                            <input type="checkbox" id="gnome-mana-increase" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Mana Increase" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Mana Increase</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Max Mana Points (MP) increase by Prof Bonus (Requires GM definition).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-trapper">
+                            <input type="checkbox" id="gnome-trapper" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Trapper" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Trapper</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Proficiency with thieves' tools. Advantage on checks to detect traps & Dex checks to disarm/set simple traps.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-lightning-insulation">
+                            <input type="checkbox" id="gnome-lightning-insulation" name="ancestry-trait" data-ap="2" data-type="expanded" data-trait-name="Lightning Insulation" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Lightning Insulation</span>
+                                <span class="trait-cost positive">(2 AP)</span>
+                                <p class="trait-description">Resistance to lightning damage. Natural lightning strikes targeting area automatically miss you.</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-trade-expertise">
+                            <input type="checkbox" id="gnome-trade-expertise" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Trade Expertise" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Trade Expertise</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Choose Crafting/Subterfuge trade. Mastery Cap & Level +1 (Requires GM definition).</p>
+                            </div>
+                        </label>
+                    </li>
+                     <li class="trait-item">
+                        <label for="gnome-storm-knowledge">
+                            <input type="checkbox" id="gnome-storm-knowledge" name="ancestry-trait" data-ap="1" data-type="expanded" data-trait-name="Storm Knowledge" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Storm Knowledge</span>
+                                <span class="trait-cost positive">(1 AP)</span>
+                                <p class="trait-description">Advantage on Survival checks during storms & Nature checks on weather phenomena.</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <h3 class="trait-category">Negative Traits (Grant AP)</h3>
+                <ul class="trait-list">
+                    <li class="trait-item">
+                        <label for="gnome-sunlight-sensitivity">
+                            <input type="checkbox" id="gnome-sunlight-sensitivity" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Sunlight Sensitivity" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Sunlight Sensitivity</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on attack rolls and Perception checks relying on sight in direct sunlight.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-short-legged">
+                            <input type="checkbox" id="gnome-short-legged" name="ancestry-trait" data-ap="-2" data-type="negative" data-trait-name="Short-Legged" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Short-Legged</span>
+                                <span class="trait-cost negative">(-2 AP)</span>
+                                <p class="trait-description">Speed reduced by 5 feet (to 20ft total).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-agility-decrease">
+                            <input type="checkbox" id="gnome-agility-decrease" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Agility Decrease" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Agility Decrease</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Dexterity score decreased by 1 (min 1).</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-elemental-vulnerability">
+                            <input type="checkbox" id="gnome-elemental-vulnerability" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Elemental Vulnerability" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Elemental Vulnerability</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Choose Fire, Cold, or Lightning. Vulnerability to damage of that type.</p>
+                            </div>
+                        </label>
+                    </li>
+                    <li class="trait-item">
+                        <label for="gnome-oblivious">
+                            <input type="checkbox" id="gnome-oblivious" name="ancestry-trait" data-ap="-1" data-type="negative" data-trait-name="Oblivious" data-ancestry="gnome">
+                            <div class="trait-details">
+                                <span class="trait-name">Oblivious</span>
+                                <span class="trait-cost negative">(-1 AP)</span>
+                                <p class="trait-description">Disadvantage on Perception checks to detect hidden creatures/objects not directly in line of sight.</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Add other ancestry sections here later -->
+
+        </form> <!-- End of Trait Forms Container -->
+
+        <!-- Summary Section -->
+        <section class="summary-section">
+            <h3>Selection Summary</h3>
+            <textarea id="summary-output" readonly placeholder="Click 'Show Summary' to generate your selection details here..."></textarea>
+            <div class="summary-controls">
+                 <button id="show-summary-button">Show Summary</button>
+                 <button id="copy-summary-button">Copy Summary</button>
+            </div>
+        </section>
+
+    </div> <!-- End Container -->
+
+    <script>
+        const traitForm = document.getElementById('trait-form');
+        const ancestrySelector = document.getElementById('ancestry-selector');
+        const currentApSpan = document.getElementById('current-ap');
+        const apTrackerDiv = document.getElementById('ap-tracker');
+        const validationMessagesDiv = document.getElementById('validation-messages');
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const showSummaryButton = document.getElementById('show-summary-button');
+        const copySummaryButton = document.getElementById('copy-summary-button');
+        const summaryOutput = document.getElementById('summary-output');
+        const body = document.body;
+
+        const STARTING_AP = 5;
+        const MAX_NEGATIVE_AP_GAIN = 2;
+        const MAX_MINOR_TRAITS_SINGLE_ANCESTRY = 1; // Limit for single ancestry
+        const MAX_ANCESTRIES = 2;
+
+        const ancestrySections = {
+            human: document.getElementById('human-section'),
+            aasimar: document.getElementById('aasimar-section'),
+            gnome: document.getElementById('gnome-section'),
+        };
+
+        // --- Helper Functions ---
+        function getTraitName(checkbox) {
+            if (checkbox.dataset.traitName) {
+                return checkbox.dataset.traitName;
+            }
+            const label = checkbox.closest('label');
+            const nameSpan = label ? label.querySelector('.trait-name') : null;
+            return nameSpan ? nameSpan.textContent.trim() : 'Unknown Trait';
+        }
+
+        // --- Core Logic ---
+        function updateVisibleSections() {
+            const selectedAncestries = ancestrySelector.querySelectorAll('input[name="ancestry-choice"]:checked');
+            let selectedCount = selectedAncestries.length;
+
+            ancestrySelector.querySelectorAll('input[name="ancestry-choice"]:not(:checked)').forEach(cb => {
+                cb.disabled = selectedCount >= MAX_ANCESTRIES;
+            });
+
+            Object.values(ancestrySections).forEach(section => {
+                if (section) section.classList.remove('visible');
+            });
+
+            selectedAncestries.forEach(checkbox => {
+                const section = ancestrySections[checkbox.value];
+                if (section) {
+                    section.classList.add('visible');
+                }
+            });
+
+            if (selectedCount === 2) {
+                traitForm.classList.add('two-columns');
+            } else {
+                traitForm.classList.remove('two-columns');
+            }
+
+            calculateAndValidateAP();
+        }
+
+        function calculateAndValidateAP() {
+            const checkedTraits = traitForm.querySelectorAll('.ancestry-section.visible input[name="ancestry-trait"]:checked');
+
+            let totalAP = 0;
+            let minorTraitCount = 0;
+            let negativeAPGain = 0;
+            const validationMessages = [];
+            let isSelectionValid = true;
+            const selectedMinorTraits = [];
+
+            checkedTraits.forEach(trait => {
+                const apCost = parseInt(trait.dataset.ap, 10);
+                const traitType = trait.dataset.type;
+
+                totalAP += apCost;
+
+                if (traitType === 'minor') {
+                    minorTraitCount++;
+                    selectedMinorTraits.push(trait);
+                } else if (traitType === 'negative') {
+                    negativeAPGain += Math.abs(apCost);
+                }
+            });
+
+            // --- Validation Checks ---
+            const selectedAncestryCount = ancestrySelector.querySelectorAll('input[name="ancestry-choice"]:checked').length;
+
+            if (selectedAncestryCount === 0) {
+                 validationMessages.push(`Please select at least one ancestry.`);
+                 isSelectionValid = false;
+            }
+            if (totalAP !== STARTING_AP) {
+                validationMessages.push(`Total AP must be exactly ${STARTING_AP}. Current: ${totalAP}`);
+                isSelectionValid = false;
+            }
+            if (negativeAPGain > MAX_NEGATIVE_AP_GAIN) {
+                validationMessages.push(`Max ${MAX_NEGATIVE_AP_GAIN} AP gain from Negative Traits allowed. Gained: ${negativeAPGain}`);
+                isSelectionValid = false;
+            }
+
+            // Check Minor Trait rules based on selected ancestry count
+            if (selectedAncestryCount === 1) {
+                // Rule for SINGLE ancestry: Max 1 minor trait overall
+                if (minorTraitCount > MAX_MINOR_TRAITS_SINGLE_ANCESTRY) {
+                    validationMessages.push(`Max ${MAX_MINOR_TRAITS_SINGLE_ANCESTRY} Minor Trait allowed when only one ancestry is selected. Selected: ${minorTraitCount}`);
+                    isSelectionValid = false;
+                }
+            } else if (selectedAncestryCount === 2) {
+                // Rule for DUAL ancestry: All selected minors must be from the same origin
+                if (minorTraitCount > 0) { // Only check if minors are actually selected
+                    const minorTraitOrigins = new Set();
+                    selectedMinorTraits.forEach(trait => {
+                        if (trait.dataset.ancestry) {
+                            minorTraitOrigins.add(trait.dataset.ancestry);
+                        } else {
+                            console.warn("Minor trait missing data-ancestry:", trait.id);
+                        }
+                    });
+                    // If the set has more than one entry, traits came from different ancestries
+                    if (minorTraitOrigins.size > 1) {
+                        validationMessages.push(`Minor Traits can only be selected from one ancestry when two ancestries are chosen.`);
+                        isSelectionValid = false;
+                    }
+                    // Note: We don't check minorTraitCount against a MAX here for dual ancestry,
+                    // allowing multiple minors as long as they are from the same source.
+                }
+            }
+
+            // Check Aasimar Revelation subtype
+            const revelationCheckbox = document.getElementById('aasimar-celestial-revelation');
+            if (revelationCheckbox && revelationCheckbox.checked) {
+                const selectedSubtype = document.querySelector('input[name="celestial-revelation-choice"]:checked');
+                if (!selectedSubtype) {
+                     validationMessages.push(`Please select a Celestial Revelation subtype.`);
+                     isSelectionValid = false;
+                }
+            }
+
+
+            // --- Update Display ---
+            currentApSpan.textContent = totalAP;
+            apTrackerDiv.classList.remove('valid', 'invalid');
+
+            if (isSelectionValid) {
+                 apTrackerDiv.classList.add('valid');
+                 validationMessagesDiv.innerHTML = '<p style="color: var(--valid-color);">Selection is valid!</p>';
+            } else {
+                 apTrackerDiv.classList.add('invalid');
+                 validationMessagesDiv.innerHTML = `<ul>${validationMessages.map(msg => `<li>${msg}</li>`).join('')}</ul>`;
+            }
+
+            showSummaryButton.disabled = !isSelectionValid;
+            copySummaryButton.disabled = !isSelectionValid || summaryOutput.value.trim() === '';
+
+        }
+
+        function generateSummary() {
+            if (!apTrackerDiv.classList.contains('valid')) {
+                summaryOutput.value = "Please fix validation errors before generating summary.";
+                copySummaryButton.disabled = true;
+                return;
+            }
+
+            let summary = "Hiraeth Ancestry Summary\n";
+            summary += "=========================\n\n";
+
+            const selectedAncestries = ancestrySelector.querySelectorAll('input[name="ancestry-choice"]:checked');
+            summary += "Ancestries: ";
+            const ancestryNames = [];
+            selectedAncestries.forEach(cb => ancestryNames.push(cb.value.charAt(0).toUpperCase() + cb.value.slice(1)));
+            summary += ancestryNames.join(' / ') + "\n\n";
+
+            summary += "Traits Selected:\n";
+            const checkedTraits = traitForm.querySelectorAll('.ancestry-section.visible input[name="ancestry-trait"]:checked');
+            if (checkedTraits.length === 0) {
+                summary += "- None\n";
+            } else {
+                checkedTraits.forEach(trait => {
+                    const traitName = getTraitName(trait);
+                    const apCost = parseInt(trait.dataset.ap, 10);
+                    summary += `- ${traitName} (${apCost > 0 ? '+' : ''}${apCost} AP)`;
+
+                    if (trait.id === 'aasimar-celestial-revelation') {
+                        const selectedSubtype = document.querySelector('input[name="celestial-revelation-choice"]:checked');
+                        if (selectedSubtype) {
+                            summary += ` [Subtype: ${selectedSubtype.value}]`;
+                        } else {
+                             summary += ` [Subtype: NOT SELECTED]`;
+                        }
+                    }
+                    summary += "\n";
+                });
+            }
+
+            summary += "\n-------------------------\n";
+            summary += `Total AP Spent: ${currentApSpan.textContent} / ${STARTING_AP}\n`;
+            summary += "=========================\n";
+
+            summaryOutput.value = summary;
+            copySummaryButton.disabled = false;
+        }
+
+        async function copySummary() {
+            if (!summaryOutput.value || copySummaryButton.disabled) return;
+
+            try {
+                await navigator.clipboard.writeText(summaryOutput.value);
+                copySummaryButton.textContent = 'Copied!';
+                setTimeout(() => { copySummaryButton.textContent = 'Copy Summary'; }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                copySummaryButton.textContent = 'Copy Failed';
+                 setTimeout(() => { copySummaryButton.textContent = 'Copy Summary'; }, 2000);
+            }
+        }
+
+
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggleButton.textContent = "Light Mode";
+            } else {
+                localStorage.setItem('theme', 'light');
+                 themeToggleButton.textContent = "Dark Mode";
+            }
+        }
+
+        // --- Event Listeners ---
+        ancestrySelector.addEventListener('change', updateVisibleSections);
+        traitForm.addEventListener('change', calculateAndValidateAP);
+        themeToggleButton.addEventListener('click', toggleTheme);
+        showSummaryButton.addEventListener('click', generateSummary);
+        copySummaryButton.addEventListener('click', copySummary);
+
+         const revelationCheckbox = document.getElementById('aasimar-celestial-revelation');
+         if (revelationCheckbox) {
+             revelationCheckbox.addEventListener('change', calculateAndValidateAP);
+             const revelationOptionsDiv = document.getElementById('revelation-subtype-options');
+             if (revelationOptionsDiv) {
+                 revelationOptionsDiv.addEventListener('change', calculateAndValidateAP);
+             }
+         }
+
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggleButton.textContent = "Light Mode";
+            } else {
+                 themeToggleButton.textContent = "Dark Mode";
+            }
+            updateVisibleSections();
+            copySummaryButton.disabled = true;
+            showSummaryButton.disabled = !apTrackerDiv.classList.contains('valid');
+        });
+
+    </script>
+
+</body>
+</html>
