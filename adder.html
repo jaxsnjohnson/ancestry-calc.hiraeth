@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiraeth Race & Trait Editor</title>
+    <!-- Google Font: EB Garamond -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Theme Variables (Inspired by Map Viewer) --- */
+        :root {
+            /* Light Mode */
+            --bg-primary-light: #fdfaf6;
+            --bg-secondary-light: #f4f0eb;
+            --text-primary-light: #6b2c25;
+            --text-secondary-light: #bb9b73;
+            --accent-color-light: #a0522d; /* Sienna */
+            --border-color-light: #dcd3c8;
+            --highlight-bg-light: rgba(212, 163, 106, 0.2);
+            --input-bg-light: #ffffff;
+            --input-border-light: var(--border-color-light);
+            --shadow-color-light: rgba(107, 44, 37, 0.15);
+            --glass-bg-light: rgba(253, 250, 246, 0.85); /* More opaque for editor */
+            --glass-border-light: rgba(160, 82, 45, 0.3);
+            --remove-btn-bg-light: rgba(220, 53, 69, 0.1);
+            --remove-btn-border-light: rgba(220, 53, 69, 0.4);
+            --remove-btn-text-light: #dc3545;
+            --button-bg-light: rgba(244, 240, 235, 0.7);
+            --button-text-light: var(--text-primary-light);
+            --button-border-light: var(--glass-border-light);
+
+            /* Dark Mode */
+            --bg-primary-dark: #222034;
+            --bg-secondary-dark: #1b1830;
+            --text-primary-dark: #e8e6f2;
+            --text-secondary-dark: #b9b8e0;
+            --accent-color-dark: #eda94d; /* Gold/Orange */
+            --border-color-dark: #524f6c;
+            --highlight-bg-dark: rgba(237, 174, 73, 0.2);
+            --input-bg-dark: #2a2840;
+            --input-border-dark: var(--border-color-dark);
+            --shadow-color-dark: rgba(0, 0, 0, 0.3);
+            --glass-bg-dark: rgba(34, 33, 50, 0.85); /* More opaque for editor */
+            --glass-border-dark: rgba(245, 67, 91, 0.3);
+            --remove-btn-bg-dark: rgba(241, 124, 112, 0.15);
+            --remove-btn-border-dark: rgba(241, 124, 112, 0.5);
+            --remove-btn-text-dark: #f17c70;
+            --button-bg-dark: rgba(52, 58, 64, 0.7);
+            --button-text-dark: var(--text-primary-dark);
+            --button-border-dark: var(--glass-border-dark);
+
+            /* Apply Defaults */
+            --bg-primary: var(--bg-primary-light);
+            --bg-secondary: var(--bg-secondary-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --accent-color: var(--accent-color-light);
+            --border-color: var(--border-color-light);
+            --highlight-bg: var(--highlight-bg-light);
+            --input-bg: var(--input-bg-light);
+            --input-border: var(--input-border-light);
+            --shadow-color: var(--shadow-color-light);
+            --glass-bg: var(--glass-bg-light);
+            --glass-border: var(--glass-border-light);
+            --remove-btn-bg: var(--remove-btn-bg-light);
+            --remove-btn-border: var(--remove-btn-border-light);
+            --remove-btn-text: var(--remove-btn-text-light);
+            --button-bg: var(--button-bg-light);
+            --button-text: var(--button-text-light);
+            --button-border: var(--button-border-light);
+        }
+
+        body.dark-theme {
+            --bg-primary: var(--bg-primary-dark);
+            --bg-secondary: var(--bg-secondary-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --accent-color: var(--accent-color-dark);
+            --border-color: var(--border-color-dark);
+            --highlight-bg: var(--highlight-bg-dark);
+            --input-bg: var(--input-bg-dark);
+            --input-border: var(--input-border-dark);
+            --shadow-color: var(--shadow-color-dark);
+            --glass-bg: var(--glass-bg-dark);
+            --glass-border: var(--glass-border-dark);
+            --remove-btn-bg: var(--remove-btn-bg-dark);
+            --remove-btn-border: var(--remove-btn-border-dark);
+            --remove-btn-text: var(--remove-btn-text-dark);
+            --button-bg: var(--button-bg-dark);
+            --button-text: var(--button-text-dark);
+            --button-border: var(--button-border-dark);
+        }
+
+        /* --- Base & Container --- */
+        html, body {
+            height: 100%; margin: 0; padding: 0;
+            font-family: 'EB Garamond', serif;
+            background-color: var(--bg-primary); color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px; /* Keep it reasonably contained */
+            margin: 25px auto;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            border: 1px solid var(--glass-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* --- Typography --- */
+        h1 {
+            text-align: center;
+            margin-bottom: 1.2em;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.5em;
+        }
+        h2 { /* Race Name */
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.8em;
+            margin-top: 0;
+            color: var(--accent-color);
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h3 { /* Section Titles (Base Stats, Traits) */
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 1.8em;
+            margin-bottom: 1em;
+            color: var(--text-primary);
+            border-bottom: 1px dotted var(--border-color);
+            padding-bottom: 0.4em;
+        }
+        p { margin-bottom: 1.2em; font-size: 1.1rem; }
+
+        /* --- Buttons --- */
+        button, .button { /* Added .button class for styling consistency */
+            display: inline-block; /* For .button */
+            padding: 10px 15px;
+            background-color: var(--button-bg);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--button-text);
+            border: 1px solid var(--button-border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'EB Garamond', serif;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            margin-right: 8px;
+            margin-bottom: 8px; /* Spacing for buttons */
+            box-shadow: 0 1px 3px var(--shadow-color);
+            text-decoration: none; /* For .button used as link */
+            text-align: center;
+            vertical-align: middle;
+        }
+        button:hover, .button:hover {
+            border-color: var(--accent-color);
+            background-color: var(--highlight-bg);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            color: var(--button-text); /* Ensure text color remains on hover */
+        }
+        button:disabled, .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            background-color: transparent;
+        }
+        .remove-button {
+            background-color: var(--remove-btn-bg);
+            border-color: var(--remove-btn-border);
+            color: var(--remove-btn-text);
+            padding: 4px 8px; /* Smaller remove buttons */
+            font-size: 0.9rem;
+            margin-left: 10px;
+            float: right; /* Position remove buttons to the right */
+        }
+        .remove-button:hover {
+            opacity: 0.8;
+            background-color: var(--remove-btn-bg); /* Keep bg on hover */
+            border-color: var(--remove-btn-text);
+        }
+        .theme-toggle-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            border: none;
+            z-index: 1000;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        body.dark-theme .theme-toggle-button { color: var(--bg-secondary); }
+        .theme-toggle-button:hover { opacity: 0.9; background-color: var(--accent-color); }
+
+        /* --- Controls Area --- */
+        #controls {
+            margin-bottom: 2em;
+            padding-bottom: 1.5em;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; /* Align items */
+            gap: 15px;
+            align-items: center;
+        }
+        #controls label { font-weight: 600; margin-right: 5px; }
+
+        /* --- Input Fields & Selects --- */
+        input[type="text"], input[type="number"], select, textarea {
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem;
+            padding: 8px 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            margin-bottom: 10px; /* Spacing below inputs */
+            width: 100%; /* Default full width */
+            box-sizing: border-box;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--highlight-bg);
+        }
+        select {
+            appearance: none; /* Custom dropdown arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23${props => props.theme.textSecondary.substring(1)}%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px auto;
+            padding-right: 30px; /* Space for arrow */
+        }
+        /* --- Race & Trait Containers --- */
+        .race-container {
+            margin-bottom: 2.5em;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 3px 10px var(--shadow-color);
+        }
+        .base-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+            gap: 15px;
+            margin-bottom: 1.5em;
+        }
+        .base-stats-grid label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .base-stats-grid input, .base-stats-grid select {
+            margin-bottom: 0; /* Remove bottom margin inside grid */
+        }
+
+        .trait-list { list-style: none; padding: 0; margin-top: 1em; }
+        .trait-item-display {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            display: flex; /* Use flex for alignment */
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to top */
+        }
+        body.dark-theme .trait-item-display {
+             background-color: rgba(255, 255, 255, 0.03);
+             border-color: rgba(255, 255, 255, 0.1);
+        }
+        .trait-item-display .details { flex-grow: 1; margin-right: 10px; }
+        .trait-item-display .name { font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 3px; }
+        .trait-item-display .ap { font-size: 0.9rem; color: var(--text-secondary); margin-left: 8px; }
+        .trait-item-display .ap.minor { color: var(--minor-trait-color); }
+        .trait-item-display .ap.negative { color: var(--negative-trait-color); font-weight: 600; }
+        .trait-item-display .desc { font-size: 1rem; opacity: 0.9; display: block; margin-top: 5px; }
+        .trait-item-display .remove-button { flex-shrink: 0; /* Prevent button shrinking */ }
+
+
+        /* --- Add Trait Modal --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin: 10% auto; /* 10% from the top and centered */
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 550px; /* Maximum width */
+            border-radius: 8px;
+            box-shadow: 0 5px 25px var(--shadow-color);
+            color: var(--text-primary);
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 1.5em;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.5em;
+        }
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .modal-content textarea { min-height: 80px; }
+        .modal-controls { text-align: right; margin-top: 20px; }
+        .close-button {
+            color: var(--text-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1;
+            margin-top: -10px; /* Adjust position */
+        }
+        .close-button:hover, .close-button:focus {
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* --- JSON Output --- */
+        #json-output-section { margin-top: 2.5em; }
+        #json-output {
+            width: 100%;
+            min-height: 250px;
+            margin-top: 10px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            resize: vertical;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+        }
+        body.dark-theme #json-output {
+             background-color: var(--bg-secondary-dark);
+             border-color: var(--border-color-dark);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Hiraeth Race & Trait Editor</h1>
+
+        <div id="controls">
+            <label for="new-race-name">New Race Name:</label>
+            <input type="text" id="new-race-name" placeholder="e.g., Elf">
+            <button id="add-race-btn">Add Race</button>
+            <button id="export-json-btn" style="margin-left: auto;">Export as JSON</button> <!-- Moved Export -->
+        </div>
+
+        <div id="race-list-container">
+            <!-- Dynamically added race sections go here -->
+        </div>
+
+        <section id="json-output-section" style="display: none;"> <!-- Hidden initially -->
+            <h3>Generated JSON Data</h3>
+            <textarea id="json-output" readonly></textarea>
+        </section>
+
+    </div> <!-- End Container -->
+
+    <!-- Add Trait Modal -->
+    <div id="add-trait-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-btn">&times;</span>
+            <h3 id="modal-title">Add New Trait</h3>
+            <input type="hidden" id="modal-race-id">
+            <input type="hidden" id="modal-trait-type">
+
+            <label for="trait-name">Trait Name:</label>
+            <input type="text" id="trait-name" required>
+
+            <label for="trait-desc">Description:</label>
+            <textarea id="trait-desc" required></textarea>
+
+            <label for="trait-ap">Ancestry Points (AP):</label>
+            <input type="number" id="trait-ap" required step="1">
+
+            <div class="modal-controls">
+                <button id="cancel-trait-btn" class="remove-button" type="button">Cancel</button>
+                <button id="save-trait-btn" type="button">Save Trait</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Race Section Template -->
+    <template id="race-template">
+        <div class="race-container" data-race-id="">
+            <h2>
+                <span class="race-name-display">Race Name</span>
+                <button class="remove-button remove-race-btn">Remove Race</button>
+            </h2>
+
+            <h3>Base Stats</h3>
+            <div class="base-stats-grid">
+                <div>
+                    <label for="race-size">Size:</label>
+                    <select class="race-size-input">
+                        <option value="Tiny">Tiny</option>
+                        <option value="Small">Small</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Large">Large</option>
+                        <option value="Huge">Huge</option>
+                        <option value="Gargantuan">Gargantuan</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="race-speed">Speed (ft):</label>
+                    <input type="number" class="race-speed-input" value="30" step="5" min="0">
+                </div>
+                <div>
+                    <label for="race-type">Creature Type:</label>
+                    <input type="text" class="race-type-input" value="Humanoid">
+                </div>
+                 <div>
+                    <label for="race-asi">Base ASI:</label>
+                    <input type="text" class="race-asi-input" placeholder="e.g., +2 Str, +1 Con">
+                </div>
+            </div>
+
+            <!-- Trait Sections -->
+            <div class="trait-section minor-traits">
+                <h3>Minor Traits (0 AP) <button class="add-trait-btn" data-trait-type="minor">+</button></h3>
+                <ul class="trait-list"></ul>
+            </div>
+            <div class="trait-section expanded-traits">
+                <h3>Expanded Traits <button class="add-trait-btn" data-trait-type="expanded">+</button></h3>
+                <ul class="trait-list"></ul>
+            </div>
+             <div class="trait-section negative-traits">
+                <h3>Negative Traits <button class="add-trait-btn" data-trait-type="negative">+</button></h3>
+                <ul class="trait-list"></ul>
+            </div>
+        </div>
+    </template>
+
+    <!-- Trait Item Template -->
+    <template id="trait-template">
+        <li class="trait-item-display" data-trait-id="">
+            <div class="details">
+                <span class="name">Trait Name</span> <span class="ap">(X AP)</span>
+                <span class="desc">Trait description goes here.</span>
+            </div>
+            <button class="remove-button remove-trait-btn">X</button>
+        </li>
+    </template>
+
+    <!-- Moved Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle-button">Toggle Theme</button>
+
+    <script>
+        const addRaceBtn = document.getElementById('add-race-btn');
+        const newRaceNameInput = document.getElementById('new-race-name');
+        const raceListContainer = document.getElementById('race-list-container');
+        const raceTemplate = document.getElementById('race-template');
+        const traitTemplate = document.getElementById('trait-template');
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const body = document.body;
+        const exportJsonBtn = document.getElementById('export-json-btn');
+        const jsonOutputSection = document.getElementById('json-output-section');
+        const jsonOutputTextarea = document.getElementById('json-output');
+
+        // Modal Elements
+        const addTraitModal = document.getElementById('add-trait-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const cancelTraitBtn = document.getElementById('cancel-trait-btn');
+        const saveTraitBtn = document.getElementById('save-trait-btn');
+        const modalTitle = document.getElementById('modal-title');
+        const modalRaceIdInput = document.getElementById('modal-race-id');
+        const modalTraitTypeInput = document.getElementById('modal-trait-type');
+        const modalTraitNameInput = document.getElementById('trait-name');
+        const modalTraitDescInput = document.getElementById('trait-desc');
+        const modalTraitApInput = document.getElementById('trait-ap');
+
+        let racesData = {}; // Store all race data
+        let nextRaceId = 0;
+        let nextTraitId = 0;
+
+        // --- Data Handling ---
+        function generateRaceId() { return `race_${nextRaceId++}`; }
+        function generateTraitId() { return `trait_${nextTraitId++}`; }
+
+        function updateRaceData(raceId, field, value) {
+            if (racesData[raceId]) {
+                if (!racesData[raceId].baseStats) {
+                    racesData[raceId].baseStats = {};
+                }
+                racesData[raceId].baseStats[field] = value;
+                // console.log("Updated racesData:", racesData); // For debugging
+            }
+        }
+
+        function addTraitData(raceId, traitData) {
+            if (racesData[raceId]) {
+                const typeKey = `${traitData.type}Traits`; // e.g., "minorTraits"
+                if (!racesData[raceId][typeKey]) {
+                    racesData[raceId][typeKey] = [];
+                }
+                racesData[raceId][typeKey].push(traitData);
+                // console.log("Updated racesData:", racesData); // For debugging
+            }
+        }
+
+        function removeTraitData(raceId, traitId) {
+             if (!racesData[raceId]) return;
+
+             const traitTypes = ['minorTraits', 'expandedTraits', 'negativeTraits'];
+             for (const typeKey of traitTypes) {
+                 if (racesData[raceId][typeKey]) {
+                     const initialLength = racesData[raceId][typeKey].length;
+                     racesData[raceId][typeKey] = racesData[raceId][typeKey].filter(trait => trait.id !== traitId);
+                     // If length changed, we found and removed it
+                     if (racesData[raceId][typeKey].length < initialLength) break;
+                 }
+             }
+             // console.log("Updated racesData:", racesData); // For debugging
+        }
+
+        function removeRaceData(raceId) {
+            delete racesData[raceId];
+            // console.log("Updated racesData:", racesData); // For debugging
+        }
+
+
+        // --- DOM Manipulation ---
+        function addRace() {
+            const raceName = newRaceNameInput.value.trim();
+            if (!raceName) {
+                alert("Please enter a race name.");
+                return;
+            }
+
+            const raceId = generateRaceId();
+            const raceFragment = raceTemplate.content.cloneNode(true);
+            const raceContainer = raceFragment.querySelector('.race-container');
+            const raceNameDisplay = raceFragment.querySelector('.race-name-display');
+
+            raceContainer.dataset.raceId = raceId;
+            raceNameDisplay.textContent = raceName;
+
+            // Initialize data structure
+            racesData[raceId] = {
+                id: raceId,
+                name: raceName,
+                baseStats: { // Default base stats
+                    size: raceContainer.querySelector('.race-size-input').value,
+                    speed: parseInt(raceContainer.querySelector('.race-speed-input').value, 10),
+                    type: raceContainer.querySelector('.race-type-input').value,
+                    asi: raceContainer.querySelector('.race-asi-input').value
+                },
+                minorTraits: [],
+                expandedTraits: [],
+                negativeTraits: []
+            };
+
+            // Add event listeners for the new section
+            addRaceEventListeners(raceContainer, raceId);
+
+            raceListContainer.appendChild(raceFragment);
+            newRaceNameInput.value = ''; // Clear input
+        }
+
+        function addTraitToDOM(raceId, traitData) {
+            const raceContainer = raceListContainer.querySelector(`.race-container[data-race-id="${raceId}"]`);
+            if (!raceContainer) return;
+
+            const listElement = raceContainer.querySelector(`.${traitData.type}-traits .trait-list`);
+            if (!listElement) return;
+
+            const traitFragment = traitTemplate.content.cloneNode(true);
+            const traitItem = traitFragment.querySelector('.trait-item-display');
+            const apSpan = traitItem.querySelector('.ap');
+
+            traitItem.dataset.traitId = traitData.id;
+            traitItem.querySelector('.name').textContent = traitData.name;
+            traitItem.querySelector('.desc').textContent = traitData.description;
+            apSpan.textContent = `(${traitData.ap > 0 ? '+' : ''}${traitData.ap} AP)`;
+
+            // Add class for specific styling if needed
+            apSpan.classList.add(traitData.type);
+            if (traitData.ap < 0) apSpan.classList.add('negative');
+            if (traitData.ap === 0) apSpan.classList.add('minor');
+
+
+            traitItem.querySelector('.remove-trait-btn').addEventListener('click', () => {
+                removeTraitData(raceId, traitData.id);
+                traitItem.remove();
+            });
+
+            listElement.appendChild(traitFragment);
+        }
+
+        function addRaceEventListeners(raceContainer, raceId) {
+            // Remove Race Button
+            raceContainer.querySelector('.remove-race-btn').addEventListener('click', () => {
+                if (confirm(`Are you sure you want to remove the race "${racesData[raceId]?.name || raceId}" and all its traits?`)) {
+                    removeRaceData(raceId);
+                    raceContainer.remove();
+                }
+            });
+
+            // Base Stat Inputs
+            raceContainer.querySelector('.race-size-input').addEventListener('change', (e) => updateRaceData(raceId, 'size', e.target.value));
+            raceContainer.querySelector('.race-speed-input').addEventListener('input', (e) => updateRaceData(raceId, 'speed', parseInt(e.target.value, 10) || 0));
+            raceContainer.querySelector('.race-type-input').addEventListener('input', (e) => updateRaceData(raceId, 'type', e.target.value));
+            raceContainer.querySelector('.race-asi-input').addEventListener('input', (e) => updateRaceData(raceId, 'asi', e.target.value));
+
+            // Add Trait Buttons
+            raceContainer.querySelectorAll('.add-trait-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const traitType = button.dataset.traitType;
+                    openAddTraitModal(raceId, traitType);
+                });
+            });
+        }
+
+        // --- Modal Logic ---
+        function openAddTraitModal(raceId, traitType) {
+            modalRaceIdInput.value = raceId;
+            modalTraitTypeInput.value = traitType;
+            modalTitle.textContent = `Add New ${traitType.charAt(0).toUpperCase() + traitType.slice(1)} Trait`;
+
+            // Clear previous inputs
+            modalTraitNameInput.value = '';
+            modalTraitDescInput.value = '';
+            modalTraitApInput.value = (traitType === 'minor') ? 0 : ''; // Default AP for minor
+
+            // Set AP input constraints based on type
+            if (traitType === 'minor') {
+                modalTraitApInput.value = 0;
+                modalTraitApInput.readOnly = true;
+                modalTraitApInput.min = 0;
+                modalTraitApInput.max = 0;
+            } else if (traitType === 'negative') {
+                modalTraitApInput.readOnly = false;
+                modalTraitApInput.max = -1; // Must be negative
+                modalTraitApInput.min = -10; // Arbitrary lower limit
+            } else { // Expanded or Default
+                modalTraitApInput.readOnly = false;
+                modalTraitApInput.min = 1; // Must be positive
+                modalTraitApInput.max = 10; // Arbitrary upper limit
+            }
+
+
+            addTraitModal.style.display = "block";
+            modalTraitNameInput.focus();
+        }
+
+        function closeAddTraitModal() {
+            addTraitModal.style.display = "none";
+        }
+
+        function saveTrait() {
+            const raceId = modalRaceIdInput.value;
+            const traitType = modalTraitTypeInput.value;
+            const name = modalTraitNameInput.value.trim();
+            const description = modalTraitDescInput.value.trim();
+            const ap = parseInt(modalTraitApInput.value, 10);
+
+            // Validation
+            if (!name || !description || isNaN(ap)) {
+                alert("Please fill in all trait details and ensure AP is a number.");
+                return;
+            }
+            if (traitType === 'minor' && ap !== 0) {
+                alert("Minor traits must have an AP cost of 0.");
+                return;
+            }
+             if (traitType === 'negative' && ap >= 0) {
+                alert("Negative traits must have a negative AP cost (e.g., -1, -2).");
+                return;
+            }
+             if (traitType === 'expanded' && ap <= 0) {
+                alert("Expanded traits must have a positive AP cost (e.g., 1, 2, 3).");
+                return;
+            }
+
+
+            const traitId = generateTraitId();
+            const traitData = { id: traitId, name, description, ap, type: traitType };
+
+            addTraitData(raceId, traitData);
+            addTraitToDOM(raceId, traitData);
+            closeAddTraitModal();
+        }
+
+        // --- Export Logic ---
+        function exportJSON() {
+            const jsonString = JSON.stringify(racesData, null, 2); // Pretty print
+            jsonOutputTextarea.value = jsonString;
+            jsonOutputSection.style.display = 'block'; // Show the section
+            jsonOutputTextarea.select(); // Select text for easy copying
+             // Optional: Copy to clipboard automatically
+             /*
+             try {
+                 navigator.clipboard.writeText(jsonString).then(() => {
+                     alert('JSON copied to clipboard!');
+                 }, (err) => {
+                     console.error('Could not copy text: ', err);
+                     alert('Could not copy JSON automatically. Please copy manually from the text area.');
+                 });
+             } catch (err) {
+                 console.error('Clipboard API not available: ', err);
+                 alert('Could not copy JSON automatically. Please copy manually from the text area.');
+             }
+             */
+        }
+
+        // --- Theme Toggle ---
+        function toggleTheme() {
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggleButton.textContent = "Light Mode";
+            } else {
+                localStorage.setItem('theme', 'light');
+                 themeToggleButton.textContent = "Dark Mode";
+            }
+        }
+
+        // --- Event Listeners ---
+        addRaceBtn.addEventListener('click', addRace);
+        themeToggleButton.addEventListener('click', toggleTheme);
+        exportJsonBtn.addEventListener('click', exportJSON);
+
+        // Modal Listeners
+        closeModalBtn.addEventListener('click', closeAddTraitModal);
+        cancelTraitBtn.addEventListener('click', closeAddTraitModal);
+        saveTraitBtn.addEventListener('click', saveTrait);
+        // Close modal if clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target == addTraitModal) {
+                closeAddTraitModal();
+            }
+        });
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                themeToggleButton.textContent = "Light Mode";
+            } else {
+                 body.classList.remove('dark-theme');
+                 themeToggleButton.textContent = "Dark Mode";
+            }
+            // Load existing data from localStorage if desired (enhancement)
+            // const savedData = localStorage.getItem('hiraethRacesData');
+            // if (savedData) {
+            //     racesData = JSON.parse(savedData);
+            //     // Need function here to rebuild DOM from racesData
+            //     rebuildDOMFromData();
+            // }
+        });
+
+    </script>
+
+</body>
+</html>
