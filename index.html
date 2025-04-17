@@ -902,10 +902,10 @@
             {
                 id: "elf-wood-elf-package",
                 name: "Default Wood Elf Package",
-                ap: 5, // 0 + 1 + 2 + 2 (Assuming Fey Ancestry is the minor)
+                ap: 5, // 0 + 1 + 1 + 2 + 1
                 category: "default_package",
                 short_desc: "Focuses on forest agility and stealth. Includes Fey Ancestry.",
-                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Forest Dweller (1 AP)\n- Mask of the Wild (2 AP)\n- Elven Weapon Training (1 AP - Added for balance)", // Adjusted to reach 5AP
+                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Forest Dweller (1 AP)\n- Mask of the Wild (2 AP)\n- Elven Weapon Training (1 AP)",
                 is_default_package: true,
                 default_package_traits: ["elf-fey-ancestry", "elf-darkvision-base", "elf-forest-dweller", "elf-mask-of-the-wild", "elf-elven-weapon-training"]
             },
@@ -962,10 +962,10 @@
              {
                 id: "elf-moon-elf-package",
                 name: "Default Moon Elf Package",
-                ap: 5, // 0 + 1 + 2 + 1 + 1 (Added Darkvision + Weapon Training)
+                ap: 5, // 0 + 1 + 2 + 1 + 1
                 category: "default_package",
                 short_desc: "Flight, earthen connection, mystic ties. Includes Fey Ancestry.",
-                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Wings (2 AP)\n- Earthen Song (1 AP)\n- Elven Weapon Training (1 AP)", // Adjusted
+                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Wings (2 AP)\n- Earthen Song (1 AP)\n- Elven Weapon Training (1 AP)",
                 is_default_package: true,
                 default_package_traits: ["elf-fey-ancestry", "elf-darkvision-base", "elf-wings", "elf-earthen-song", "elf-elven-weapon-training"]
             },
@@ -975,7 +975,7 @@
                 ap: 5, // 0 + 1 + 2 + 1 + 1
                 category: "default_package",
                 short_desc: "Aquatic adaptation and combat. Includes Fey Ancestry.",
-                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Child of the Sea (2 AP)\n- Friend of the Sea (1 AP)\n- Aquatic Combat Training (1 AP)", // Renamed/Adjusted
+                long_desc: "Selects the following traits for 5 AP:\n- Fey Ancestry (0 AP - Minor)\n- Darkvision (Base) (1 AP)\n- Child of the Sea (2 AP)\n- Friend of the Sea (1 AP)\n- Aquatic Combat Training (1 AP)",
                 is_default_package: true,
                 default_package_traits: ["elf-fey-ancestry", "elf-darkvision-base", "elf-child-of-the-sea", "elf-friend-of-the-sea", "elf-aquatic-combat-training"]
             },
@@ -1251,49 +1251,49 @@
             {
                 id: "dwarf-iron-mountain-package", name: "Default Iron Mountain Package", ap: 5, category: "default_package",
                 short_desc: "Classic hardy dwarf. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Tough (1 AP)\n- Dwarven Combat Training (1 AP)\n- Tool Proficiency (0 AP - Minor - Choose Smith, Brewer, or Mason)", // Made Tool Proficiency the minor here
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Tough (1 AP)\n- Dwarven Combat Training (1 AP)\n- Tool Proficiency (0 AP - Minor - Requires choice)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-tough", "dwarf-dwarven-combat-training", "dwarf-tool-proficiency"]
             },
              {
                 id: "dwarf-ironbash-package", name: "Default Ironbash Package", ap: 5, category: "default_package",
                 short_desc: "Resilient defender. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Rock Stepper (2 AP)\n- Iron Stomach (0 AP - Minor)", // Weapon Mastery removed to fit 5AP, Iron Stomach made minor
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Rock Stepper (2 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-rock-stepper", "dwarf-iron-stomach"]
             },
              {
                 id: "dwarf-auroran-package", name: "Default Auroran Package", ap: 5, category: "default_package",
                 short_desc: "Psionic/Aberration focus. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Deep Delver (2 AP)\n- Iron Stomach (0 AP - Minor)", // Intense Focus & Mental Adaptations removed/changed to fit 5AP
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Deep Delver (2 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-deep-delver", "dwarf-iron-stomach"]
             },
              {
                 id: "dwarf-mountain-package", name: "Default Mountain Package", ap: 5, category: "default_package",
                 short_desc: "Defensive mountaineer. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Mountaineer (2 AP)\n- Iron Stomach (0 AP - Minor)", // Stonecunning & Stout Defender removed/changed
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Mountaineer (2 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-mountaineer", "dwarf-iron-stomach"]
             },
              {
                 id: "dwarf-hill-package", name: "Default Hill Package", ap: 5, category: "default_package",
                 short_desc: "Tough and social. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Dwarven Toughness (2 AP)\n- Iron Stomach (0 AP - Minor)", // Mercantile Mindset reduced/changed
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Dwarven Toughness (2 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-dwarven-toughness", "dwarf-iron-stomach"]
             },
              {
                 id: "dwarf-cave-package", name: "Default Cave Package", ap: 4, category: "default_package", // Still 4 AP after negative
                 short_desc: "Underground specialist. Includes Resilience & Sunlight Sensitivity.",
-                long_desc: "Selects the following traits for 4 AP (needs +1 AP from another source):\n- Dwarven Resilience (2 AP)\n- Superior Darkvision (Dwarf) (2 AP - Replaces Base Darkvision)\n- Barren Acclimation (1 AP)\n- Sunlight Sensitivity (Dwarf) (-1 AP)\n- Iron Stomach (0 AP - Minor)", // Underground Combatant removed
+                long_desc: "Selects the following traits for 4 AP (needs +1 AP from another source):\n- Dwarven Resilience (2 AP)\n- Superior Darkvision (Dwarf) (2 AP - Replaces Base Darkvision)\n- Barren Acclimation (1 AP)\n- Sunlight Sensitivity (Dwarf) (-1 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-dwarven-resilience", "dwarf-superior-darkvision", "dwarf-barren-acclimation", "dwarf-sunlight-sensitivity", "dwarf-iron-stomach"]
             },
              {
                 id: "dwarf-magma-package", name: "Default Magma Package", ap: 5, category: "default_package",
                 short_desc: "Fire resistant crafter. Includes Darkvision & Resilience.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Lavawalking (2 AP)\n- Iron Stomach (0 AP - Minor)", // Master Craftsman & Molten Memory removed/changed
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Dwarven Resilience (2 AP)\n- Lavawalking (2 AP)\n- Iron Stomach (0 AP - Minor)",
                 is_default_package: true,
                 default_package_traits: ["dwarf-darkvision", "dwarf-dwarven-resilience", "dwarf-lavawalking", "dwarf-iron-stomach"]
             },
@@ -1310,7 +1310,13 @@
             },
             {
                 id: "dwarf-tool-proficiency", name: "Tool Proficiency", ap: 0, category: "minor", // Made minor for Iron Mountain package
-                short_desc: "Proficiency with smith's, brewer's, or mason's tools.", long_desc: "You gain proficiency with the artisan’s tools of your choice: smith’s tools, brewer’s supplies, or mason’s tools. (Counts as one of your Minor Traits - all Minor Traits must be from the same ancestry source)"
+                short_desc: "Proficiency with smith's, brewer's, or mason's tools.",
+                long_desc: "You gain proficiency with one type of artisan’s tools. Choose one below.",
+                suboptions: [
+                    { id: "smiths", name: "Smith's Tools", description: "Proficiency with smith's tools." },
+                    { id: "brewers", name: "Brewer's Supplies", description: "Proficiency with brewer's supplies." },
+                    { id: "masons", name: "Mason's Tools", description: "Proficiency with mason's tools." }
+                ]
             },
             {
                 id: "dwarf-stonecunning", name: "Stonecunning", ap: 1, category: "expanded", // Was part of Iron Mountain, now expanded
@@ -1545,30 +1551,55 @@
             description: "+1 Str, +1 Cha, -1 Con"
         },
         traits: [
-            // Core Choice (Not a trait, but required)
+            // Core Choice Placeholder
             {
-                id: "dragonborn-ancestry-choice", name: "Draconic Ancestry Choice", ap: 0, category: "core_choice", // Special category
-                short_desc: "REQUIRED: Choose Dragon Type (determines damage/breath).",
-                long_desc: "You MUST choose one Dragon Type (e.g., Red, Silver, Copper, etc.) when creating your character. This choice determines the damage type for your Draconic Resistance and Breath Weapon traits, and the shape of your Breath Weapon (Line or Cone). See the Dragonborn description for the full table. This choice itself costs no AP, but enables other traits."
+                id: "dragonborn-ancestry-choice-note", name: "Draconic Ancestry Choice", ap: 0, category: "core_choice",
+                short_desc: "REQUIRED: Choose Dragon Type (affects other traits).",
+                long_desc: "You MUST choose one Dragon Type (e.g., Red, Silver, Copper, etc.) when creating your character. This choice determines the damage type/shape for your Draconic Resistance and Breath Weapon traits, and your Draconic Heritage. Make the choice below on the relevant traits."
             },
             // Default Package Meta-Trait
             {
                 id: "dragonborn-default-package", name: "Default Dragonborn Package", ap: 5, category: "default_package",
                 short_desc: "Standard Dragonborn with resistance, breath, armor, and heritage.",
-                long_desc: "Selects the following traits for 5 AP (Requires Draconic Ancestry Choice):\n- Draconic Resistance (2 AP)\n- Breath Weapon (2 AP)\n- Natural Armor (1 AP)\n- Draconic Heritage (0 AP - Minor)",
+                long_desc: "Selects the following traits for 5 AP (Requires Draconic Ancestry Choice):\n- Draconic Resistance (2 AP - Requires Choice)\n- Breath Weapon (2 AP - Requires Choice)\n- Natural Armor (1 AP)\n- Draconic Heritage (0 AP - Minor - Requires Choice)",
                 is_default_package: true,
                 default_package_traits: ["dragonborn-draconic-resistance", "dragonborn-breath-weapon", "dragonborn-natural-armor", "dragonborn-draconic-heritage"]
             },
-            // Default Components
+            // Default Components with Suboptions
             {
                 id: "dragonborn-draconic-resistance", name: "Draconic Resistance", ap: 2, category: "default_component",
                 short_desc: "Resistance to damage type of chosen Draconic Ancestry.",
-                long_desc: "You gain resistance to the damage type associated with your chosen Draconic Ancestry."
+                long_desc: "You gain resistance to the damage type associated with your chosen Draconic Ancestry. Choose the type below.",
+                suboptions: [ // Simplified list, add all from table if needed
+                    { id: "acid", name: "Acid (Black/Copper)", description: "Resistance to Acid damage." },
+                    { id: "cold", name: "Cold (Silver/White)", description: "Resistance to Cold damage." },
+                    { id: "fire", name: "Fire (Brass/Gold/Red)", description: "Resistance to Fire damage." },
+                    { id: "force", name: "Force (Titanium)", description: "Resistance to Force damage." },
+                    { id: "lightning", name: "Lightning (Blue/Bronze)", description: "Resistance to Lightning damage." },
+                    { id: "necrotic", name: "Necrotic (Lead)", description: "Resistance to Necrotic damage." },
+                    { id: "poison", name: "Poison (Green/Steel)", description: "Resistance to Poison damage." },
+                    { id: "psychic", name: "Psychic (Mercury/Tin)", description: "Resistance to Psychic damage." },
+                    { id: "radiant", name: "Radiant (Platinum/Zinc)", description: "Resistance to Radiant damage." },
+                    { id: "slashing", name: "Slashing (Iron)", description: "Resistance to Slashing damage." }
+                    // Thunder is missing from table, add if applicable
+                ]
             },
             {
                 id: "dragonborn-breath-weapon", name: "Breath Weapon", ap: 2, category: "default_component",
                 short_desc: "Action exhale energy (damage/shape by Ancestry). Uses = Prof Bonus/LR.",
-                long_desc: "You can use your action to exhale destructive energy. Your chosen Draconic Ancestry determines the size, shape (15 ft cone or 5x30 ft line), and damage type. Creatures in the area make a saving throw (DC 8 + Con mod + Prof Bonus; Dex for Line, Con/Dex for Cone). Damage: 1d10 (1st), 2d10 (5th), 3d10 (11th), 4d10 (17th) on failed save, half on success. Uses equal Proficiency Bonus per long rest."
+                long_desc: "You can use your action to exhale destructive energy. Your chosen Draconic Ancestry determines the damage type and shape (Line or Cone). Creatures in the area make a saving throw (DC 8 + Con mod + Prof Bonus; Dex for Line, Con/Dex for Cone). Damage: 1d10 (1st), 2d10 (5th), 3d10 (11th), 4d10 (17th) on failed save, half on success. Uses equal Proficiency Bonus per long rest. Choose the type below (should match Resistance).",
+                 suboptions: [ // Must match Resistance options
+                    { id: "acid", name: "Acid (Line - Black/Copper)", description: "Exhale Acid in a 5x30 ft line (Dex save)." },
+                    { id: "cold", name: "Cold (Cone - Silver/White)", description: "Exhale Cold in a 15 ft cone (Con save)." },
+                    { id: "fire", name: "Fire (Cone - Brass/Gold/Red)", description: "Exhale Fire in a 15 ft cone (Dex save)." },
+                    { id: "force", name: "Force (Line - Titanium)", description: "Exhale Force in a 5x30 ft line (Dex save)." },
+                    { id: "lightning", name: "Lightning (Line - Blue/Bronze)", description: "Exhale Lightning in a 5x30 ft line (Dex save)." },
+                    { id: "necrotic", name: "Necrotic (Cone - Lead)", description: "Exhale Necrotic energy in a 15 ft cone (Con save)." },
+                    { id: "poison", name: "Poison (Cone/Line - Green/Steel)", description: "Exhale Poison in a 15 ft cone (Green, Con save) or 5x30 ft line (Steel, Con save)." }, // Combined for simplicity
+                    { id: "psychic", name: "Psychic (Cone - Mercury/Tin)", description: "Exhale Psychic energy in a 15 ft cone (Wis save - typical for psychic)." },
+                    { id: "radiant", name: "Radiant (Cone - Platinum/Zinc)", description: "Exhale Radiant energy in a 15 ft cone (Con save)." },
+                    { id: "slashing", name: "Slashing (Line - Iron)", description: "Exhale Slashing force in a 5x30 ft line (Dex save)." }
+                ]
             },
             {
                 id: "dragonborn-natural-armor", name: "Natural Armor", ap: 1, category: "default_component",
@@ -1578,7 +1609,12 @@
             {
                 id: "dragonborn-draconic-heritage", name: "Draconic Heritage", ap: 0, category: "minor",
                 short_desc: "Appearance reflects chosen dragon type (Chromatic/Metallic/Other).",
-                long_desc: "Your appearance reflects your chosen dragon type (e.g., scale color, horn shape). Choose either Chromatic or Metallic heritage (or Other, if applicable based on your Draconic Ancestry choice). This choice is primarily for flavor but may interact with specific Expanded Traits or GM rulings. (Counts as one of your Minor Traits - all Minor Traits must be from the same ancestry source)"
+                long_desc: "Your appearance reflects your chosen dragon type (e.g., scale color, horn shape). Choose your primary heritage type below (should align with your Ancestry choice). This choice is primarily for flavor but may interact with specific Expanded Traits or GM rulings. (Counts as one of your Minor Traits - all Minor Traits must be from the same ancestry source)",
+                 suboptions: [
+                    { id: "chromatic", name: "Chromatic", description: "Heritage traces to a Chromatic Dragon (Black, Blue, Green, Red, White)." },
+                    { id: "metallic", name: "Metallic", description: "Heritage traces to a Metallic Dragon (Brass, Bronze, Copper, Gold, Silver, Platinum, etc.)." },
+                    { id: "other", name: "Other", description: "Heritage traces to a less common dragon type (Gem, Planar, etc. - GM discretion)." }
+                ]
             },
             // Expanded Traits
             {
@@ -1657,7 +1693,7 @@
             {
                 id: "gnome-rock-package", name: "Default Rock Gnome Package", ap: 5, category: "default_package",
                 short_desc: "Artificer and tinker. Includes Gnome Cunning.",
-                long_desc: "Selects the following traits for 5 AP:\n- Gnome Cunning (0 AP - Minor)\n- Artificer's Lore (1 AP)\n- Tinker (1 AP)\n- Skilled Merchant (2 AP)\n- Mason’s Aptitude (1 AP)",
+                long_desc: "Selects the following traits for 5 AP:\n- Gnome Cunning (0 AP - Minor)\n- Artificer's Lore (1 AP)\n- Tinker (1 AP - Requires Choice)\n- Skilled Merchant (2 AP)\n- Mason’s Aptitude (1 AP)",
                 is_default_package: true,
                 default_package_traits: ["gnome-gnome-cunning", "gnome-artificers-lore", "gnome-tinker", "gnome-skilled-merchant", "gnome-masons-aptitude"]
             },
@@ -1698,7 +1734,16 @@
             { id: "gnome-woodcarvers-skill", name: "Woodcarver's Skill", ap: 1, category: "expanded", short_desc: "Proficiency with woodcarver's tools.", long_desc: "You gain proficiency with woodcarver's tools." },
             // Rock Gnome Components
             { id: "gnome-artificers-lore", name: "Artificer's Lore", ap: 1, category: "expanded", short_desc: "Double proficiency on History checks for magic/alchemical/tech items.", long_desc: "Whenever you make an Intelligence (History) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply." },
-            { id: "gnome-tinker", name: "Tinker", ap: 1, category: "expanded", short_desc: "Proficiency with tinker's tools, create small clockwork devices.", long_desc: "You have proficiency with artisan's tools (tinker's tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 HP). The device ceases to function after 24 hours (unless repaired), or when dismantled. You can have up to three active. Choose: Clockwork Toy, Fire Starter, or Music Box." },
+            {
+                id: "gnome-tinker", name: "Tinker", ap: 1, category: "expanded",
+                short_desc: "Proficiency with tinker's tools, create small clockwork devices.",
+                long_desc: "You have proficiency with artisan's tools (tinker's tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 HP). The device ceases to function after 24 hours (unless repaired), or when dismantled. You can have up to three active. Choose the type of device you can make:",
+                suboptions: [
+                    { id: "toy", name: "Clockwork Toy", description: "A toy animal, monster, or person that moves 5 feet across the ground on each of your turns in a random direction." },
+                    { id: "lighter", name: "Fire Starter", description: "Produces a miniature flame, which you can use to light a candle, torch, or campfire. Using the device requires your action." },
+                    { id: "musicbox", name: "Music Box", description: "Plays a single song at a moderate volume when opened." }
+                ]
+            },
             { id: "gnome-skilled-merchant", name: "Skilled Merchant", ap: 2, category: "expanded", short_desc: "Use Int/Wis/Cha and double prof bonus for checks when selling own goods.", long_desc: "When selling goods or services you personally created or significantly improved, you can use your Intelligence, Wisdom, or Charisma modifier (your choice) for any Charisma (Persuasion), Charisma (Deception), or Charisma (Performance) check made during the transaction, and you add double your proficiency bonus to the check." },
             { id: "gnome-masons-aptitude", name: "Mason’s Aptitude", ap: 1, category: "expanded", short_desc: "Proficiency with mason's tools.", long_desc: "You gain proficiency with mason's tools." },
             // Deep Gnome Components
@@ -1736,7 +1781,16 @@
             { id: "gnome-small-sized", name: "Small-Sized", ap: -1, category: "negative", short_desc: "Your size is Small.", long_desc: "Your size is Small. (Note: Redundant with base Gnome size)." },
             { id: "gnome-short-legged", name: "Short-Legged", ap: -2, category: "negative", short_desc: "Speed reduced by 5 feet.", long_desc: "Your speed is reduced by 5 feet." }, // Base speed is already 25ft
             { id: "gnome-agility-decrease", name: "Agility Decrease", ap: -1, category: "negative", short_desc: "Dexterity score decreased by 1 (min 1).", long_desc: "Your Dexterity score is decreased by 1 (minimum score of 1)." },
-            { id: "gnome-elemental-vulnerability", name: "Elemental Vulnerability", ap: -1, category: "negative", short_desc: "Choose Fire, Cold, or Lightning; gain vulnerability.", long_desc: "Choose Fire, Cold, or Lightning. You have vulnerability to damage of that type." },
+            {
+                id: "gnome-elemental-vulnerability", name: "Elemental Vulnerability", ap: -1, category: "negative",
+                short_desc: "Choose Fire, Cold, or Lightning; gain vulnerability.",
+                long_desc: "Choose one damage type below. You have vulnerability to damage of that type.",
+                suboptions: [
+                    { id: "fire", name: "Fire Vulnerability", description: "You have vulnerability to Fire damage." },
+                    { id: "cold", name: "Cold Vulnerability", description: "You have vulnerability to Cold damage." },
+                    { id: "lightning", name: "Lightning Vulnerability", description: "You have vulnerability to Lightning damage." }
+                ]
+            },
             { id: "gnome-oblivious", name: "Oblivious", ap: -1, category: "negative", short_desc: "Disadv. on Perception checks for hidden things not in line of sight.", long_desc: "You have disadvantage on Wisdom (Perception) checks made to detect hidden creatures or objects that are not directly in your line of sight." }
         ]
     },
@@ -1757,7 +1811,7 @@
             {
                 id: "goliath-mountain-born", name: "Mountain Born", ap: 1, category: "default_component",
                 short_desc: "Acclimated to high altitude and cold climates.",
-                long_desc: "You’re acclimated to high altitude, including elevations above 20,000 feet. You’re also naturally adapted to cold climates, as described in chapter 5 of the Dungeon Master's Guide."
+                long_desc: "You’re acclimated to high altitude, including elevations above 20,000 feet. You’re also naturally adapted to cold climates, as described in chapter 5 of the Dungeon Master’s Guide."
             },
 
             // Giant Ancestry Choices (Core Choice - Choose ONE for 3 AP)
@@ -1861,9 +1915,9 @@
             {
                 id: "kobold-default-package", name: "Default Kobold Package", ap: 4, category: "default_package", // 1+2+1+1-1 = 4
                 short_desc: "Includes sprint, resilience, pack tactics, groveling, and sunlight sensitivity.",
-                long_desc: "Selects the following traits for 4 AP (needs +1 AP from another source):\n- Skittering Sprint (1 AP)\n- Draconic Resilience (Kobold) (2 AP)\n- Pack Tactics (1 AP)\n- Grovel, Cower, and Beg (1 AP)\n- Sunlight Sensitivity (Kobold) (-1 AP)",
+                long_desc: "Selects the following traits for 4 AP (needs +1 AP from another source):\n- Darkvision (1 AP)\n- Skittering Sprint (1 AP)\n- Draconic Resilience (Kobold) (2 AP)\n- Pack Tactics (1 AP)\n- Grovel, Cower, and Beg (1 AP)\n- Sunlight Sensitivity (Kobold) (-1 AP)", // Added Darkvision to base package
                 is_default_package: true,
-                default_package_traits: ["kobold-skittering-sprint", "kobold-draconic-resilience", "kobold-pack-tactics", "kobold-grovel-cower-beg", "kobold-sunlight-sensitivity"]
+                default_package_traits: ["kobold-darkvision", "kobold-skittering-sprint", "kobold-draconic-resilience", "kobold-pack-tactics", "kobold-grovel-cower-beg", "kobold-sunlight-sensitivity"]
             },
             // Default Components
             {
@@ -1917,7 +1971,13 @@
             },
             {
                 id: "kobold-burning-blood", name: "Burning Blood", ap: 2, category: "expanded",
-                short_desc: "Cast Burning Hands (1st level) Prof Bonus times/LR (Int/Wis/Cha).", long_desc: "You can cast Burning Hands as a 1st-level spell a number of times per long rest equal to your Proficiency Bonus. Your spellcasting ability for this spell is Intelligence, Wisdom, or Charisma (choose when you take this trait)."
+                short_desc: "Cast Burning Hands (1st level) Prof Bonus times/LR (Choose Ability).",
+                long_desc: "You can cast Burning Hands as a 1st-level spell a number of times per long rest equal to your Proficiency Bonus. Choose your spellcasting ability for this spell below.",
+                suboptions: [
+                    { id: "int", name: "Intelligence", description: "Intelligence is your spellcasting ability for Burning Hands." },
+                    { id: "wis", name: "Wisdom", description: "Wisdom is your spellcasting ability for Burning Hands." },
+                    { id: "cha", name: "Charisma", description: "Charisma is your spellcasting ability for Burning Hands." }
+                ]
             },
             {
                 id: "kobold-improvised-brutality", name: "Improvised Brutality", ap: 1, category: "expanded",
@@ -1963,7 +2023,7 @@
             {
                 id: "tiefling-default-package", name: "Default Tiefling Package (Infernal Legacy)", ap: 5, category: "default_package",
                 short_desc: "Standard infernal heritage. Includes Darkvision.",
-                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Fiendish Resistance (Fire) (2 AP)\n- Infernal Legacy (Thaumaturgy, Hellish Rebuke, Darkness) (2 AP)", // Adjusted Infernal Legacy cost
+                long_desc: "Selects the following traits for 5 AP:\n- Darkvision (1 AP)\n- Fiendish Resistance (Fire) (2 AP)\n- Infernal Legacy (Thaumaturgy, Hellish Rebuke, Darkness) (2 AP)",
                 is_default_package: true,
                 default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-fire", "tiefling-infernal-legacy"]
             },
@@ -1973,36 +2033,111 @@
                 short_desc: "Resistance to Fire damage.", long_desc: "You have Resistance to Fire damage."
             },
             {
-                id: "tiefling-infernal-legacy", name: "Infernal Legacy", ap: 2, category: "default_component", // Adjusted cost
+                id: "tiefling-infernal-legacy", name: "Infernal Legacy", ap: 2, category: "default_component",
                 short_desc: "Thaumaturgy cantrip, Hellish Rebuke (3rd, 2nd-level), Darkness (5th) 1/LR (Cha).", long_desc: "You know the Thaumaturgy cantrip. At 3rd level, you can cast Hellish Rebuke as a 2nd-level spell once per long rest. At 5th level, you can cast Darkness once per long rest. Charisma is your spellcasting ability for these spells."
             },
 
             // --- Subrace Legacy Packages (Replace Default) ---
-            // Note: These packages assume Darkvision (1 AP) is taken separately or included if needed to reach 5 AP. Most are 4 AP + Darkvision.
+            // Note: These packages are 4 AP + 1 AP Darkvision = 5 AP total.
             {
                 id: "tiefling-legacy-pride-package", name: "Legacy of Pride Package (Asmodeus)", ap: 4, category: "default_package",
                 short_desc: "Commanding presence, fire resistance.",
-                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Commanding Presence (2 AP)\n- Superiority Aura (1 AP - Replaced with Darkvision in calculation)", // Adjusted for AP
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Commanding Presence (2 AP)",
                 is_default_package: true,
-                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-commanding-presence"] // Superiority Aura removed for AP balance
+                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-commanding-presence"]
             },
             {
                 id: "tiefling-legacy-greed-package", name: "Legacy of Greed Package (Mammon)", ap: 4, category: "default_package",
                 short_desc: "Finds valuables, fire resistance.",
-                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Find What is Valuable (2 AP)\n- Gold Sense (1 AP - Replaced with Darkvision in calculation)", // Adjusted for AP
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Find What is Valuable (2 AP)",
                 is_default_package: true,
-                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-find-what-is-valuable"] // Gold Sense removed for AP balance
+                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-find-what-is-valuable"]
             },
-             // ... (Add similar packages for Lust, Envy, Gluttony, Wrath, Sloth, Lilith, Deceiver, Elements, Shadow, Celestial, Beast Touched, Chaos)
-             // Example for Lust:
              {
                 id: "tiefling-legacy-lust-package", name: "Legacy of Lust Package (Fierna/Glasya)", ap: 4, category: "default_package",
                 short_desc: "Seductive magic, fire resistance.",
-                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Seductive Spell (2 AP)\n- Alluring (1 AP - Replaced with Darkvision in calculation)", // Adjusted for AP
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Seductive Spell (2 AP)",
                 is_default_package: true,
-                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-seductive-spell"] // Alluring removed for AP balance
+                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-seductive-spell"]
             },
-             // ... Add all other Legacy Packages similarly, adjusting components to fit 4 AP + Darkvision (1 AP) = 5 AP total ...
+            {
+                id: "tiefling-legacy-envy-package", name: "Legacy of Envy Package (Levistus)", ap: 4, category: "default_package",
+                short_desc: "Icy magic, cold resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Cold) (2 AP)\n- Covetous Magic (2 AP)",
+                is_default_package: true,
+                default_package_traits: ["tiefling-fiendish-resistance-cold", "tiefling-covetous-magic"]
+            },
+            {
+                id: "tiefling-legacy-gluttony-package", name: "Legacy of Gluttony Package (Baalzebul)", ap: 4, category: "default_package",
+                short_desc: "Corrupting magic, poison resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Poison) (2 AP)\n- Corrupting Magic (2 AP)",
+                is_default_package: true,
+                default_package_traits: ["tiefling-fiendish-resistance-poison", "tiefling-corrupting-magic"]
+            },
+            {
+                id: "tiefling-legacy-wrath-package", name: "Legacy of Wrath Package (Zariel)", ap: 4, category: "default_package",
+                short_desc: "Smite magic, fire resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Infernal Wrath (2 AP)",
+                is_default_package: true,
+                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-infernal-wrath"]
+            },
+            {
+                id: "tiefling-legacy-sloth-package", name: "Legacy of Sloth Package (Belial/Dispater)", ap: 4, category: "default_package",
+                short_desc: "Deceptive magic, fire resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 4 AP (add Darkvision for 5 AP total):\n- Fiendish Resistance (Fire) (2 AP)\n- Deceptive Magic (2 AP)",
+                is_default_package: true,
+                default_package_traits: ["tiefling-fiendish-resistance-fire", "tiefling-deceptive-magic"]
+            },
+             {
+                id: "tiefling-legacy-lilith-package", name: "Legacy of Lilith Package", ap: 5, category: "default_package", // 1+2+1+1
+                short_desc: "Necrotic grasp, fiendish magnetism.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Fiendish Resistance (Necrotic) (1 AP)\n- Lilith’s Grasp (2 AP)\n- Fiendish Magnetism (1 AP)", // Arcane Heritage removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-necrotic", "tiefling-liliths-grasp", "tiefling-fiendish-magnetism"]
+            },
+             {
+                id: "tiefling-legacy-deceiver-package", name: "Legacy of the Deceiver Package", ap: 5, category: "default_package", // 1+2+1+1
+                short_desc: "Master of disguise, psychic resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Fiendish Resistance (Psychic) (1 AP)\n- Master of Disguise (2 AP)\n- Silver Veil (1 AP)", // Illusive Edge removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-psychic", "tiefling-master-of-disguise", "tiefling-silver-veil"]
+            },
+             {
+                id: "tiefling-legacy-elements-package", name: "Legacy of the Elements Package", ap: 5, category: "default_package", // 1+2+2+0
+                short_desc: "Elemental magic and resistance (Requires Choice).",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Elemental Resistance (2 AP - Requires Choice)\n- Elemental Magic (2 AP - Requires Choice)\n- Elemental Choice (0 AP - Placeholder)",
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-elemental-resistance", "tiefling-elemental-magic"] // Choice handled in components
+            },
+             {
+                id: "tiefling-legacy-shadow-package", name: "Legacy of Shadow Package", ap: 5, category: "default_package", // 1+1+2+1
+                short_desc: "Shadow blade, stealth focus.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Fiendish Resistance (Necrotic) (1 AP)\n- Blade of Gloom (2 AP)\n- Shadow Walker (1 AP)", // Fade into Darkness removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-necrotic", "tiefling-blade-of-gloom", "tiefling-shadow-walker"]
+            },
+             {
+                id: "tiefling-legacy-celestial-package", name: "Legacy of the Celestial Package", ap: 5, category: "default_package", // 1+2+2
+                short_desc: "Healing light, radiant resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Celestial Resistance (Radiant) (2 AP)\n- Healing Light (2 AP)", // Blessed Will removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-celestial-resistance-radiant", "tiefling-healing-light"]
+            },
+             {
+                id: "tiefling-legacy-beast-package", name: "Legacy of the Beast Touched Package", ap: 5, category: "default_package", // 1+1+2+1
+                short_desc: "Natural weapons, primal instincts.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Fiendish Resistance (Poison) (1 AP)\n- Natural Weapon (2 AP - Requires Choice)\n- Primal Instinct (1 AP - Requires Choice)", // Wild Magic removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-poison", "tiefling-natural-weapon", "tiefling-primal-instinct"]
+            },
+             {
+                id: "tiefling-legacy-chaos-package", name: "Legacy of Chaos Package", ap: 5, category: "default_package", // 1+1+1+2
+                short_desc: "Chaotic magic, psychic resistance.",
+                long_desc: "Replaces Default Package. Selects the following traits for 5 AP (includes Darkvision):\n- Darkvision (1 AP)\n- Fiendish Resistance (Psychic) (1 AP)\n- Chaos Bolt (1 AP)\n- Confusing Magic (2 AP)", // Wild Effect removed
+                is_default_package: true,
+                default_package_traits: ["tiefling-darkvision", "tiefling-fiendish-resistance-psychic", "tiefling-chaos-bolt", "tiefling-confusing-magic"]
+            },
+
 
             // --- Legacy Component Traits (also available individually) ---
             // Pride
@@ -2013,13 +2148,96 @@
             { id: "tiefling-gold-sense", name: "Gold Sense", ap: 1, category: "expanded", short_desc: "Adv. on checks to detect/appraise valuables.", long_desc: "You have advantage on Intelligence (Investigation) or Wisdom (Perception) checks made to detect or appraise precious metals, gems, or art objects." },
             // Lust
             { id: "tiefling-seductive-spell", name: "Seductive Spell", ap: 2, category: "expanded", short_desc: "Friends cantrip, Charm Person (1st), Enthrall (5th) 1/LR (Cha).", long_desc: "You know the Friends cantrip. You can cast Charm Person as a 1st-level spell once per long rest. At 5th level, you can cast Enthrall once per long rest. Charisma is your spellcasting ability." },
-            { id: "tiefling-alluring", name: "Alluring", ap: 1, category: "expanded", short_desc: "Proficiency in Deception or Persuasion.", long_desc: "You gain proficiency in the Deception or Persuasion skill (your choice)." },
-            // ... Add components for Envy, Gluttony, Wrath, Sloth, Lilith, Deceiver, Elements, Shadow, Celestial, Beast Touched, Chaos ...
-            // Example Envy:
+            {
+                id: "tiefling-alluring", name: "Alluring", ap: 1, category: "expanded",
+                short_desc: "Proficiency in Deception or Persuasion.",
+                long_desc: "You gain proficiency in one skill. Choose below:",
+                suboptions: [
+                    { id: "deception", name: "Deception", description: "You gain proficiency in the Deception skill." },
+                    { id: "persuasion", name: "Persuasion", description: "You gain proficiency in the Persuasion skill." }
+                ]
+            },
+            // Envy
             { id: "tiefling-fiendish-resistance-cold", name: "Fiendish Resistance (Cold)", ap: 2, category: "expanded", short_desc: "Resistance to Cold damage.", long_desc: "You have Resistance to Cold damage." },
             { id: "tiefling-covetous-magic", name: "Covetous Magic", ap: 2, category: "expanded", short_desc: "Ray of Frost cantrip, Armor of Agathys (1st), Detect Thoughts (5th) 1/LR (Cha).", long_desc: "You know the Ray of Frost cantrip. You can cast Armor of Agathys as a 1st-level spell once per long rest. At 5th level, you can cast Detect Thoughts once per long rest. Charisma is your spellcasting ability." },
             { id: "tiefling-watchful-mind", name: "Watchful Mind", ap: 1, category: "expanded", short_desc: "Proficiency in Insight.", long_desc: "You gain proficiency in the Insight skill." },
-            // ... etc for all legacies ...
+            // Gluttony
+            { id: "tiefling-fiendish-resistance-poison", name: "Fiendish Resistance (Poison)", ap: 1, category: "expanded", short_desc: "Resistance to Poison damage.", long_desc: "You have Resistance to Poison damage." }, // Reduced cost to 1 AP
+            { id: "tiefling-corrupting-magic", name: "Corrupting Magic", ap: 2, category: "expanded", short_desc: "Poison Spray cantrip, Ray of Sickness (1st), Ray of Enfeeblement (5th) 1/LR (Cha).", long_desc: "You know the Poison Spray cantrip. You can cast Ray of Sickness as a 1st-level spell once per long rest. At 5th level, you can cast Ray of Enfeeblement once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-resilient-gut", name: "Resilient Gut", ap: 1, category: "expanded", short_desc: "Adv. on saves vs Poisoned.", long_desc: "You have advantage on saving throws against being Poisoned." },
+            // Wrath
+            { id: "tiefling-infernal-wrath", name: "Infernal Wrath", ap: 2, category: "expanded", short_desc: "Produce Flame cantrip, Searing Smite (1st), Branding Smite (5th, 2nd-level) 1/LR (Cha).", long_desc: "You know the Produce Flame cantrip. You can cast Searing Smite as a 1st-level spell once per long rest. At 5th level, you can cast Branding Smite as a 2nd-level spell once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-fiendish-fury", name: "Fiendish Fury", ap: 1, category: "expanded", short_desc: "Proficiency in Intimidation.", long_desc: "You gain proficiency in the Intimidation skill." },
+            // Sloth
+            { id: "tiefling-deceptive-magic", name: "Deceptive Magic", ap: 2, category: "expanded", short_desc: "Minor Illusion cantrip, Disguise Self (1st), Invisibility (5th) 1/LR (Cha).", long_desc: "You know the Minor Illusion cantrip. You can cast Disguise Self once per long rest. At 5th level, you can cast Invisibility once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-apathy-shield", name: "Apathy Shield", ap: 1, category: "expanded", short_desc: "Reaction: gain resistance to one instance of damage (1/SR or LR).", long_desc: "When you take damage, you can use your reaction to gain resistance to that instance of damage. You can use this trait once per short or long rest." },
+            // Lilith
+            { id: "tiefling-fiendish-resistance-necrotic", name: "Fiendish Resistance (Necrotic)", ap: 1, category: "expanded", short_desc: "Resistance to Necrotic damage.", long_desc: "You have Resistance to Necrotic damage." },
+            { id: "tiefling-liliths-grasp", name: "Lilith’s Grasp", ap: 2, category: "expanded", short_desc: "Chill Touch cantrip, Hex (1st), Suggestion (5th) 1/LR (Cha).", long_desc: "You know the Chill Touch cantrip. You can cast Hex as a 1st-level spell once per long rest. At 5th level, you can cast Suggestion once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-fiendish-magnetism", name: "Fiendish Magnetism", ap: 1, category: "expanded", short_desc: "Adv. on Intimidation/Persuasion vs fiends.", long_desc: "You have advantage on Charisma (Intimidation) and Charisma (Persuasion) checks when interacting with fiends or creatures significantly influenced by fiendish powers." },
+            { id: "tiefling-arcane-heritage", name: "Arcane Heritage", ap: 1, category: "expanded", short_desc: "Proficiency in Arcana.", long_desc: "You gain proficiency in the Arcana skill." },
+            // Deceiver
+            { id: "tiefling-fiendish-resistance-psychic", name: "Fiendish Resistance (Psychic)", ap: 1, category: "expanded", short_desc: "Resistance to Psychic damage.", long_desc: "You have Resistance to Psychic damage." },
+            { id: "tiefling-master-of-disguise", name: "Master of Disguise", ap: 2, category: "expanded", short_desc: "Minor Illusion cantrip, Disguise Self at will, Invisibility (5th) 1/LR (Cha).", long_desc: "You know the Minor Illusion cantrip. You can cast Disguise Self at will, without expending a spell slot. At 5th level, you can cast Invisibility once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-silver-veil", name: "Silver Veil", ap: 1, category: "expanded", short_desc: "Proficiency in Deception.", long_desc: "You gain proficiency in the Deception skill." },
+            { id: "tiefling-illusive-edge", name: "Illusive Edge", ap: 1, category: "expanded", short_desc: "Adv. on Deception checks while under illusion effect.", long_desc: "You have advantage on Charisma (Deception) checks made while you are under the effect of an illusion spell (like Disguise Self or Minor Illusion)." },
+            // Elements
+            {
+                id: "tiefling-elemental-resistance", name: "Elemental Resistance", ap: 2, category: "expanded",
+                short_desc: "Resistance to chosen element (Acid, Cold, Lightning, Thunder).",
+                long_desc: "You gain resistance to one damage type. Choose below.",
+                suboptions: [
+                    { id: "acid", name: "Acid Resistance", description: "Resistance to Acid damage." },
+                    { id: "cold", name: "Cold Resistance", description: "Resistance to Cold damage." },
+                    { id: "lightning", name: "Lightning Resistance", description: "Resistance to Lightning damage." },
+                    { id: "thunder", name: "Thunder Resistance", description: "Resistance to Thunder damage." }
+                ]
+            },
+            {
+                id: "tiefling-elemental-magic", name: "Elemental Magic", ap: 2, category: "expanded",
+                short_desc: "Cantrip, 1st-level spell (3rd), 2nd-level spell (5th) based on element (1/LR, Cha).",
+                long_desc: "You learn spells based on an element. Choose the element below (should match Elemental Resistance). Cantrip: Acid Splash/Ray of Frost/Shocking Grasp/Thunderclap. 3rd Lvl (1/LR): Chromatic Orb (type)/Ice Knife/Thunderwave/Witch Bolt. 5th Lvl (1/LR): Dragon's Breath (type)/Gust of Wind/Maximilian's Earthen Grasp/Snilloc's Snowball Swarm. Charisma is your spellcasting ability.",
+                 suboptions: [
+                    { id: "acid", name: "Acid Magic", description: "Cantrip: Acid Splash. 3rd: Chromatic Orb (Acid). 5th: Dragon's Breath (Acid)." },
+                    { id: "cold", name: "Cold Magic", description: "Cantrip: Ray of Frost. 3rd: Ice Knife. 5th: Snilloc's Snowball Swarm." },
+                    { id: "lightning", name: "Lightning Magic", description: "Cantrip: Shocking Grasp. 3rd: Witch Bolt. 5th: Dragon's Breath (Lightning)." },
+                    { id: "thunder", name: "Thunder Magic", description: "Cantrip: Thunderclap. 3rd: Thunderwave. 5th: Gust of Wind (Thematically related)." } // Adjusted 5th level spell for Thunder
+                ]
+            },
+            { id: "tiefling-elemental-surge", name: "Elemental Surge", ap: 1, category: "expanded", short_desc: "1/LR add Cha mod to one damage roll of chosen element spell.", long_desc: "Once per long rest, when you cast a spell that deals damage of your chosen elemental type, you can add your Charisma modifier to one damage roll of that spell." },
+            // Shadow
+            { id: "tiefling-blade-of-gloom", name: "Blade of Gloom", ap: 2, category: "expanded", short_desc: "True Strike cantrip, Shadow Blade (2nd level) 1/LR (Cha, Conc).", long_desc: "You know the True Strike cantrip. You can cast Shadow Blade as a 2nd-level spell once per long rest. Charisma is your spellcasting ability. Requires concentration." },
+            { id: "tiefling-fade-into-darkness", name: "Fade into Darkness", ap: 1, category: "expanded", short_desc: "Adv. on Stealth checks in dim light/darkness.", long_desc: "You have advantage on Dexterity (Stealth) checks made while in dim light or darkness." },
+            { id: "tiefling-shadow-walker", name: "Shadow Walker", ap: 1, category: "expanded", short_desc: "Proficiency in Stealth.", long_desc: "You gain proficiency in the Stealth skill." },
+            // Celestial
+            { id: "tiefling-celestial-resistance-radiant", name: "Celestial Resistance (Radiant)", ap: 2, category: "expanded", short_desc: "Resistance to Radiant damage.", long_desc: "You have Resistance to Radiant damage." },
+            { id: "tiefling-healing-light", name: "Healing Light", ap: 2, category: "expanded", short_desc: "Light cantrip, Cure Wounds (1st), Lesser Restoration (5th) 1/LR (Cha).", long_desc: "You know the Light cantrip. You can cast Cure Wounds as a 1st-level spell once per long rest. At 5th level, you can cast Lesser Restoration once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-blessed-will", name: "Blessed Will", ap: 1, category: "expanded", short_desc: "Adv. on saves vs Frightened or Charmed.", long_desc: "You have advantage on saving throws against being Frightened or Charmed." },
+            // Beast Touched
+            {
+                id: "tiefling-natural-weapon", name: "Natural Weapon", ap: 2, category: "expanded",
+                short_desc: "Grow claws, fangs, or horns (Choose one).",
+                long_desc: "You grow claws, fangs, horns, or some other natural weapon. Choose one below:",
+                suboptions: [
+                    { id: "claws", name: "Claws", description: "Your unarmed strikes deal 1d6 slashing damage and have the Finesse property." },
+                    { id: "fangs", name: "Fangs", description: "Your unarmed strikes deal 1d6 piercing damage. If you hit with a fang attack while grappling a creature, the attack deals an extra 1d6 damage." },
+                    { id: "horns", name: "Horns", description: "Your unarmed strikes deal 1d6 piercing damage. If you move at least 10 feet straight toward a target and then hit it with a horn attack on the same turn, the target takes an extra 1d6 piercing damage." }
+                ]
+            },
+            {
+                id: "tiefling-primal-instinct", name: "Primal Instinct", ap: 1, category: "expanded",
+                short_desc: "Choose: Perception/smell OR speak with specific beast type.",
+                long_desc: "Choose one benefit below:",
+                 suboptions: [
+                    { id: "perception", name: "Keen Senses", description: "Gain proficiency in Perception and advantage on checks relying on smell." },
+                    { id: "speak", name: "Beast Speaker", description: "Gain the ability to speak with a specific type of beast (e.g., canines, felines, reptiles - GM choice)." }
+                ]
+            },
+            { id: "tiefling-wild-magic", name: "Wild Magic", ap: 1, category: "expanded", short_desc: "Learn one 1st-level Druid/Ranger spell (1/LR, Cha).", long_desc: "You learn one 1st-level spell from the Druid or Ranger spell list, often related to your beast type (e.g., Jump, Speak with Animals, Animal Friendship). You can cast it once per long rest. Charisma is your spellcasting ability." },
+            // Chaos
+            { id: "tiefling-chaos-bolt", name: "Chaos Bolt", ap: 1, category: "expanded", short_desc: "Know Chaos Bolt spell (treat as cantrip, scales).", long_desc: "You know the Chaos Bolt spell (treat as a cantrip you can cast at will, dealing 1d8 damage + 1d6 element, scaling like a normal cantrip). Charisma is your spellcasting ability." },
+            { id: "tiefling-confusing-magic", name: "Confusing Magic", ap: 2, category: "expanded", short_desc: "Tasha's Hideous Laughter (1st), Confusion (5th) 1/LR (Cha).", long_desc: "You can cast Tasha's Hideous Laughter once per long rest. At 5th level, you can cast Confusion once per long rest. Charisma is your spellcasting ability." },
+            { id: "tiefling-wild-effect", name: "Wild Effect", ap: 1, category: "expanded", short_desc: "1/LR when casting spell (1st+): roll d8, on 1 trigger minor chaos.", long_desc: "Once per long rest, when you cast a spell of 1st level or higher, roll a d8. On a 1, roll on the Wild Magic Surge table (if available) or trigger a minor, harmless chaotic effect (GM's choice, e.g., glowing eyes, spectral butterflies, temporary skin color change)." },
 
             // --- General Expanded Traits ---
             {
